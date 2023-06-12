@@ -6,13 +6,22 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/Jonescy/explorer-api/config"
 	"io"
 	"net/http"
 	"net/url"
 	"time"
 
+	"github.com/Jonescy/explorer-api/config"
+
 	"golang.org/x/time/rate"
+)
+
+var defaultClient = NewClient(
+	WithLimitTier(5),
+	WithHTTPClient(http.DefaultClient),
+	WithTimeout(10*time.Second),
+	WithAPIKey(""),
+	WithBaseURL(config.Ethereum),
 )
 
 type BeforeHook func(ctx context.Context, url string) error
@@ -39,6 +48,12 @@ func WithHTTPClient(conn *http.Client) ClientOption {
 		client.conn = conn
 	}
 }
+func WithTimeout(timeout time.Duration) ClientOption {
+	return func(client *Client) {
+		client.conn.Timeout = timeout
+	}
+}
+
 func WithAPIKey(key string) ClientOption {
 	return func(client *Client) {
 		client.key = key
@@ -49,12 +64,9 @@ func WithBaseURL(url config.Network) ClientOption {
 		client.baseUrl = string(url)
 	}
 }
+
 func NewClient(opts ...ClientOption) *Client {
-	c := &Client{
-		conn: &http.Client{
-			Timeout: 10 * time.Second,
-		},
-	}
+	c := defaultClient
 	for _, opt := range opts {
 		opt(c)
 	}
@@ -83,7 +95,7 @@ func (c *Client) call(ctx context.Context, module, action string, param map[stri
 	// recover if there shall be an panic
 	defer func() {
 		if r := recover(); r != nil {
-			fmt.Errorf("[ouch! panic recovered] please report this with what you did and what you expected, panic detail: %v", r)
+			fmt.Printf("[ouch! panic recovered] please report this with what you did and what you expected, panic detail: %v\n", r)
 		}
 	}()
 
@@ -99,7 +111,11 @@ func (c *Client) call(ctx context.Context, module, action string, param map[stri
 	if err != nil {
 		return err
 	}
-	defer resp.Body.Close()
+	defer func(Body io.ReadCloser) {
+		if err := Body.Close(); err != nil {
+			fmt.Printf("error closing response body: %v\n", err)
+		}
+	}(resp.Body)
 	var content bytes.Buffer
 	if _, err = io.Copy(&content, resp.Body); err != nil {
 		//err = utils.wrapErr(err, "reading response")

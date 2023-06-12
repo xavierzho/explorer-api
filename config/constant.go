@@ -23,9 +23,24 @@ const (
 	GoerliTestnet     Network = "api-goerli.etherscan.io"
 	SepoliaTestnet    Network = "api-sepolia.etherscan.io"
 	BinanceSmartChain Network = "api.bscscan.com"
+	BinanceTestnet    Network = "api-testnet.bscscan.com"
 	Polygon           Network = "api.polygonscan.com"
 	Fantom            Network = "api.ftmscan.com"
 	Arbitrum          Network = "api.arbiscan.io"
+)
+
+var (
+	// ignore unused network error
+	_ = Ethereum
+	_ = GoerliTestnet
+	_ = SepoliaTestnet
+	_ = BinanceSmartChain
+	_ = BinanceTestnet
+	_ = Polygon
+	_ = Fantom
+	_ = Arbitrum
+	// ignore unused tire error
+	_ = TierPro
 )
 
 func (n Network) String() string {
