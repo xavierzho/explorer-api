@@ -12,7 +12,7 @@ Create an API instance and off you go. :rocket:
 
 usage example on `examples/` folder.
 
-You may find full method list at [GoDoc](https://godoc.org/github.com/Jonescy/explorer-api).
+You may find full method list at [GoDoc](https://pkg.go.dev/github.com/Jonescy/explorer-api).
 
 # Etherscan API Key
 
