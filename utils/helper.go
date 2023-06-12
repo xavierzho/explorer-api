@@ -50,8 +50,6 @@ type Time time.Time
 func (t *Time) UnmarshalText(text []byte) (err error) {
 	input, err := strconv.ParseInt(string(text), 10, 64)
 	if err != nil {
-		err = WrapErr(err, "strconv.ParseInt")
-
 		return
 	}
 
