@@ -1,8 +1,10 @@
 package transaction
 
-import "github.com/Jonescy/explorer-api/services"
+import (
+	"github.com/Jonescy/explorer-api"
+)
 
-type Service services.Service
+type Service explorer.Service
 
 func (*Service) Name() string { return "transaction" }
 

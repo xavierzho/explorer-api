@@ -1,4 +1,4 @@
-package core
+package explorer
 
 import (
 	"bytes"
@@ -11,8 +11,6 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/Jonescy/explorer-api/config"
-
 	"golang.org/x/time/rate"
 )
 
@@ -21,7 +19,7 @@ var defaultClient = NewClient(
 	WithHTTPClient(http.DefaultClient),
 	WithTimeout(10*time.Second),
 	WithAPIKey(""),
-	WithBaseURL(config.Ethereum),
+	WithBaseURL(Ethereum),
 )
 
 type BeforeHook func(ctx context.Context, url string) error
@@ -38,7 +36,7 @@ type Client struct {
 
 type ClientOption func(client *Client)
 
-func WithLimitTier(limit config.Tier) ClientOption {
+func WithLimitTier(limit Tier) ClientOption {
 	return func(client *Client) {
 		client.limiter = rate.NewLimiter(rate.Every(time.Second), int(limit))
 	}
@@ -59,7 +57,7 @@ func WithAPIKey(key string) ClientOption {
 		client.key = key
 	}
 }
-func WithBaseURL(url config.Network) ClientOption {
+func WithBaseURL(url Network) ClientOption {
 	return func(client *Client) {
 		client.baseUrl = string(url)
 	}

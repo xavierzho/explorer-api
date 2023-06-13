@@ -1,16 +1,16 @@
 package account
 
 import (
+	"github.com/Jonescy/explorer-api"
 	"strconv"
 	"strings"
 
-	"github.com/Jonescy/explorer-api/services"
 	"github.com/Jonescy/explorer-api/utils"
 )
 
 // Service is the module to access account related APIs.
 // implement etherscan.Action
-type Service services.Service
+type Service explorer.Service
 
 func (*Service) Name() string { return "account" }
 

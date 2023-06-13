@@ -1,11 +1,11 @@
 package block
 
 import (
-	"github.com/Jonescy/explorer-api/services"
+	"github.com/Jonescy/explorer-api"
 	"strconv"
 )
 
-type Service services.Service
+type Service explorer.Service
 
 func (*Service) Name() string { return "block" }
 func (s *Service) BlockReward(blockNo int) (reward Reward, err error) {

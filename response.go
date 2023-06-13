@@ -1,4 +1,4 @@
-package core
+package explorer
 
 import "encoding/json"
 

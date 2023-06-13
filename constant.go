@@ -1,4 +1,4 @@
-package config
+package explorer
 
 // Tier is the tier of the API key.
 //

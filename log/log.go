@@ -1,8 +1,10 @@
 package log
 
-import "github.com/Jonescy/explorer-api/services"
+import (
+	"github.com/Jonescy/explorer-api"
+)
 
-type Service services.Service
+type Service explorer.Service
 
 // Name returns the name of the service.
 func (*Service) Name() string { return "logs" }

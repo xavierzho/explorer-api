@@ -1,8 +1,10 @@
 package gastracker
 
-import "github.com/Jonescy/explorer-api/services"
+import (
+	"github.com/Jonescy/explorer-api"
+)
 
-type Service services.Service
+type Service explorer.Service
 
 // Name returns the name of this service.
 func (s *Service) Name() string { return "gastracker" }

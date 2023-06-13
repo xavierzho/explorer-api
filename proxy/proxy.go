@@ -2,10 +2,10 @@ package proxy
 
 import (
 	"fmt"
-	"github.com/Jonescy/explorer-api/services"
+	"github.com/Jonescy/explorer-api"
 )
 
-type Service services.Service
+type Service explorer.Service
 
 func (*Service) Name() string { return "proxy" }
 

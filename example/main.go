@@ -2,19 +2,17 @@ package main
 
 import (
 	"fmt"
+	"github.com/Jonescy/explorer-api"
+	"github.com/Jonescy/explorer-api/account"
 	"sync"
-
-	"github.com/Jonescy/explorer-api/config"
-	"github.com/Jonescy/explorer-api/core"
-	"github.com/Jonescy/explorer-api/services/account"
 )
 
 func main() {
-	client := core.NewClient(
-		core.WithAPIKey("YourApiKeyToken"),
-		core.WithBaseURL(config.Ethereum),
+	client := explorer.NewClient(
+		explorer.WithAPIKey("YourApiKeyToken"),
+		explorer.WithBaseURL(explorer.Ethereum),
 		// sub one to avoid hitting the limit
-		core.WithLimitTier(config.TierFree-1))
+		explorer.WithLimitTier(explorer.TierFree-1))
 	var wg sync.WaitGroup
 	service := account.Service{Client: client}
 	// using the same client to call the same endpoint concurrently, testing the rate limit

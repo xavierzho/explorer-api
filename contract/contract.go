@@ -1,10 +1,11 @@
 package contract
 
 import (
-	"github.com/Jonescy/explorer-api/services"
+	"github.com/Jonescy/explorer-api"
+	"strings"
 )
 
-type Service services.Service
+type Service explorer.Service
 
 func (s *Service) Name() string { return "contract" }
 func (s *Service) GetABI(address string) (abi string, err error) {
@@ -21,7 +22,10 @@ func (s *Service) GetSourceCode(address string) (sourceCodes []SourceCode, err e
 	return
 }
 
-func (s *Service) GetContractCreation(address string) (contractCreations []Creation, err error) {
-	err = s.Client.Call(s.Name(), "getcontractcreation", nil, nil)
+func (s *Service) GetContractCreation(address []string) (contractCreations []Creation, err error) {
+
+	err = s.Client.Call(s.Name(), "getcontractcreation", map[string]string{
+		"contractaddresses": strings.Join(address, ","),
+	}, &contractCreations)
 	return
 }

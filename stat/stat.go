@@ -1,11 +1,11 @@
 package stat
 
 import (
-	"github.com/Jonescy/explorer-api/services"
+	"github.com/Jonescy/explorer-api"
 	"github.com/Jonescy/explorer-api/utils"
 )
 
-type Service services.Service
+type Service explorer.Service
 
 func (*Service) Name() string { return "stats" }
 
