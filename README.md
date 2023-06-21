@@ -4,7 +4,7 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/Jonescy/explorer-api)](https://goreportcard.com/report/github.com/Jonescy/explorer-api)
 ![License](https://img.shields.io/github/license/Jonescy/explorer-api.svg)
 
-Golang client for the Etherscan.io API(and its families like BscScan). with nearly full implementation(accounts, transactions, tokens, contracts, blocks, stats), full network support(Mainnet, Ropsten, Kovan, Rinkby, Goerli, Tobalaba), and only depending on standard library.
+Golang client for the Etherscan.io API(and its families like BscScan). with nearly full implementation(accounts, transactions, tokens, contracts, blocks, stats), full network support(Mainnet, Ropsten, Kovan, Rinkby, Goerli, Tobalaba), and depending on `go-ethereum/common`.
 
 
 # Usage

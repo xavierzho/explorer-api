@@ -3,95 +3,101 @@ package proxy
 import (
 	"fmt"
 	"github.com/Jonescy/explorer-api/modules"
+	"github.com/Jonescy/explorer-api/utils"
+	"github.com/ethereum/go-ethereum/common"
 )
 
 type Service modules.Service
 
 func (*Service) Name() string { return "proxy" }
 
-func (s *Service) GetBlockNumber() (blockNumber string, err error) {
+func (s *Service) GetBlockNumber() (blockNumber utils.BN, err error) {
 	err = s.Client.Call(s, "eth_blockNumber", nil, &blockNumber)
 	return
 }
 
-func (s *Service) GetBlockByNumber(blockNumber int) (block Block, err error) {
-	err = s.Client.Call(s, "eth_getBlockByNumber", map[string]string{"tag": fmt.Sprintf("0x%x", blockNumber), "boolean": "true"}, &block)
+func (s *Service) GetBlockByNumber(blockNumber *utils.BN) (block Block, err error) {
+	err = s.Client.Call(s, "eth_getBlockByNumber", utils.M{"tag": blockNumber.Hex(), "boolean": "true"}, &block)
 	return
 }
 
-func (s *Service) GetUncleByBlockNumberAndIndex(tag, index int) (uncle Uncle, err error) {
-	err = s.Client.Call(s, "eth_getUncleByBlockNumberAndIndex", map[string]string{"tag": fmt.Sprintf("0x%x", tag), "index": fmt.Sprintf("0x%x", index)}, &uncle)
+func (s *Service) GetUncleByBlockNumberAndIndex(tag, index *utils.BN) (uncle Uncle, err error) {
+	err = s.Client.Call(s, "eth_getUncleByBlockNumberAndIndex", utils.M{"tag": tag.Hex(), "index": index.Hex()}, &uncle)
 	return
 }
 
-func (s *Service) GetTxCountByBlockNumber(tag int) (txCount string, err error) {
-	tagStr := fmt.Sprintf("0x%x", tag)
-	if tag == 0 {
+func (s *Service) GetTxCountByBlockNumber(tag *utils.BN) (txCount utils.BN, err error) {
+	tagStr := tag.Hex()
+	if tag.Int().Int64() == 0 || tag == nil {
 		tagStr = "latest"
 	}
-	err = s.Client.Call(s, "eth_getBlockTransactionCountByNumber", map[string]string{"tag": tagStr}, &txCount)
+	err = s.Client.Call(s, "eth_getBlockTransactionCountByNumber", utils.M{"tag": tagStr}, &txCount)
 	return
 }
 
-func (s *Service) GetTxByHash(hash string) (tx Tx, err error) {
-	err = s.Client.Call(s, "eth_getTransactionByHash", map[string]string{"txhash": hash}, &tx)
+func (s *Service) GetTxByHash(hash common.Hash) (tx Tx, err error) {
+	err = s.Client.Call(s, "eth_getTransactionByHash", utils.M{"txhash": hash.Hex()}, &tx)
 	return
 }
 
-func (s *Service) GetTxByBlockNumberAndIndex(tag, index int) (tx Tx, err error) {
-	err = s.Client.Call(s, "eth_getTransactionByBlockNumberAndIndex", map[string]string{"tag": fmt.Sprintf("0x%x", tag), "index": fmt.Sprintf("0x%x", index)}, &tx)
+func (s *Service) GetTxByBlockNumberAndIndex(tag, index *utils.BN) (tx Tx, err error) {
+	err = s.Client.Call(s, "eth_getTransactionByBlockNumberAndIndex", utils.M{"tag": tag.Hex(), "index": index.Hex()}, &tx)
 	return
 }
 
-func (s *Service) GetTxCountByAddress(address string) (txCount string, err error) {
-	err = s.Client.Call(s, "eth_getTransactionCount", map[string]string{"address": address}, &txCount)
+func (s *Service) GetTxCountByAddress(address common.Address) (txCount utils.BN, err error) {
+	err = s.Client.Call(s, "eth_getTransactionCount", utils.M{"address": address.Hex()}, &txCount)
 	return
 }
 
-func (s *Service) GetTxReceiptByHash(hash string) (txReceipt TxReceipt, err error) {
-	err = s.Client.Call(s, "eth_getTransactionReceipt", map[string]string{"txhash": hash}, &txReceipt)
+func (s *Service) GetTxReceiptByHash(hash common.Hash) (txReceipt TxReceipt, err error) {
+	err = s.Client.Call(s, "eth_getTransactionReceipt", utils.M{"txhash": hash.Hex()}, &txReceipt)
 	return
 }
 
-func (s *Service) EthCall(to string, data []byte, tag int) (result string, err error) {
-	tagStr := fmt.Sprintf("0x%x", tag)
-	if tag == 0 {
+func (s *Service) EthCall(to common.Address, data []byte, tag *utils.BN) (result string, err error) {
+	tagStr := tag.Hex()
+	if tag.Int().Int64() == 0 || tag == nil {
 		tagStr = "latest"
 	}
-	err = s.Client.Call(s, "eth_call", map[string]string{"to": to, "data": fmt.Sprintf("0x%x", data), "tag": tagStr}, &result)
+	err = s.Client.Call(s, "eth_call", utils.M{"to": to.Hex(), "data": fmt.Sprintf("0x%x", data), "tag": tagStr}, &result)
 	return
 }
 
-func (s *Service) GetCode(address string, tag int) (code string, err error) {
-	tagStr := fmt.Sprintf("0x%x", tag)
-	if tag == 0 {
+func (s *Service) GetCode(address common.Address, tag *utils.BN) (code string, err error) {
+	tagStr := tag.Hex()
+	if tag.Int().Int64() == 0 || tag == nil {
 		tagStr = "latest"
 	}
-	err = s.Client.Call(s, "eth_getCode", map[string]string{"address": address, "tag": tagStr}, &code)
+	err = s.Client.Call(s, "eth_getCode", utils.M{"address": address.Hex(), "tag": tagStr}, &code)
 	return
 }
 
-func (s *Service) GetStorageAt(address string, position int, tag int) (storage string, err error) {
-	tagStr := fmt.Sprintf("0x%x", tag)
-	if tag == 0 {
+func (s *Service) GetStorageAt(address common.Address, position, tag *utils.BN) (storage string, err error) {
+	tagStr := tag.Hex()
+	if tag.Int().Int64() == 0 || tag == nil {
 		tagStr = "latest"
 	}
-	err = s.Client.Call(s, "eth_getStorageAt", map[string]string{"address": address, "position": fmt.Sprintf("0x%x", position), "tag": tagStr}, &storage)
+	err = s.Client.Call(s, "eth_getStorageAt", utils.M{
+		"address":  address.Hex(),
+		"position": position.Hex(),
+		"tag":      tagStr},
+		&storage)
 	return
 }
 
-func (s *Service) GetGasPrice() (gasPrice string, err error) {
+func (s *Service) GetGasPrice() (gasPrice utils.BN, err error) {
 	err = s.Client.Call(s, "eth_gasPrice", nil, &gasPrice)
 	return
 }
 
-func (s *Service) GetEstimatedGas(to string, value string, data []byte, g, gasPrice int) (gas string, err error) {
-	err = s.Client.Call(s, "eth_estimateGas", map[string]string{
-		"to":       to,
+func (s *Service) GetEstimatedGas(to common.Address, value string, data []byte, g, gasPrice *utils.BN) (gas string, err error) {
+	err = s.Client.Call(s, "eth_estimateGas", utils.M{
+		"to":       to.Hex(),
 		"value":    value,
 		"data":     fmt.Sprintf("0x%x", data),
-		"gas":      fmt.Sprintf("0x%x", g),
-		"gasPrice": fmt.Sprintf("0x%x", gasPrice),
+		"gas":      g.Hex(),
+		"gasPrice": gasPrice.Hex(),
 	}, &gas)
 	return
 }

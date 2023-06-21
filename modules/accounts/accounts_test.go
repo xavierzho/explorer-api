@@ -2,11 +2,12 @@ package accounts
 
 import (
 	"github.com/Jonescy/explorer-api"
+	"github.com/ethereum/go-ethereum/common"
 	"math/big"
 	"testing"
 )
 
-var client = explorer.NewClient(explorer.WithAPIKey(""),
+var client = explorer.NewClient(explorer.WithAPIKey("YouApiKeyToken"),
 	explorer.WithLimitTier(4))
 var s = &Service{
 	Client: client,
@@ -21,7 +22,7 @@ func TestService_EtherBalance(t *testing.T) {
 		t.Error("Service.Name() != account")
 	}
 	// single account balance
-	eb, err := s.EtherBalance(accounts[0])
+	eb, err := s.EtherBalance(common.HexToAddress(accounts[0]))
 	if err != nil {
 		t.Error(err)
 	}
@@ -41,7 +42,7 @@ func TestService_EtherBalance(t *testing.T) {
 
 func TestService_NormalTxByAddress(t *testing.T) {
 	var endBlock int = 100000000000
-	txs, err := s.NormalTxByAddress(accounts[0], nil, &endBlock, 1, 10, true)
+	txs, err := s.NormalTxByAddress(common.HexToAddress(accounts[0]), nil, &endBlock, 1, 10, true)
 	if err != nil {
 		t.Error(err)
 	}
@@ -52,7 +53,7 @@ func TestService_NormalTxByAddress(t *testing.T) {
 
 func TestService_InternalTx(t *testing.T) {
 	var endBlock int = 100000000000
-	txs, err := s.InternalTxByAddress(accounts[0], nil, &endBlock, 1, 10, true)
+	txs, err := s.InternalTxByAddress(common.HexToAddress(accounts[0]), nil, &endBlock, 1, 10, true)
 	if err != nil {
 		t.Error(err)
 	}
@@ -60,7 +61,7 @@ func TestService_InternalTx(t *testing.T) {
 		t.Logf("tx %+v\n", tx)
 	}
 
-	txs, err = s.InternalTxsByHash("0xfb0f81c11248669ecd85bd506cf4ad3e8d9ff9a550cb46f3a873b97dc9f8c481")
+	txs, err = s.InternalTxsByHash(common.HexToHash("0xfb0f81c11248669ecd85bd506cf4ad3e8d9ff9a550cb46f3a873b97dc9f8c481"))
 	if err != nil {
 		t.Error(err)
 	}
@@ -82,7 +83,7 @@ func TestService_InternalTx(t *testing.T) {
 
 func TestService_TransferEvents(t *testing.T) {
 	var endBlock int = 100000000000
-	erc20, err := s.ERC20TransferEventsByAddress(accounts[0], nil, &endBlock, 1, 10, true)
+	erc20, err := s.ERC20TransferEventsByAddress(common.HexToAddress(accounts[0]), nil, &endBlock, 1, 10, true)
 	if err != nil {
 		t.Error(err)
 	}
@@ -90,7 +91,7 @@ func TestService_TransferEvents(t *testing.T) {
 		t.Logf("tx %+v\n", tx)
 	}
 
-	erc721, err := s.ERC721TransferEventsByAddress(accounts[0], nil, &endBlock, 1, 10, true)
+	erc721, err := s.ERC721TransferEventsByAddress(common.HexToAddress(accounts[0]), nil, &endBlock, 1, 10, true)
 	if err != nil {
 		t.Error(err)
 	}
@@ -98,7 +99,7 @@ func TestService_TransferEvents(t *testing.T) {
 		t.Logf("tx %+v\n", tx)
 	}
 
-	erc1155, err := s.ERC1155TransferEventsByAddress(accounts[0], nil, &endBlock, 1, 10, true)
+	erc1155, err := s.ERC1155TransferEventsByAddress(common.HexToAddress(accounts[0]), nil, &endBlock, 1, 10, true)
 	if err != nil {
 		t.Error(err)
 	}
@@ -108,7 +109,7 @@ func TestService_TransferEvents(t *testing.T) {
 }
 
 func TestService_MinedBlocksByAddress(t *testing.T) {
-	blocks, err := s.MinedBlocksByAddress("0x9dd134d14d1e65f84b706d6f205cd5b1cd03a46b", 1, 10)
+	blocks, err := s.MinedBlocksByAddress(common.HexToAddress("0x9dd134d14d1e65f84b706d6f205cd5b1cd03a46b"), 1, 10)
 	if err != nil {
 		t.Error(err)
 	}
@@ -118,7 +119,7 @@ func TestService_MinedBlocksByAddress(t *testing.T) {
 }
 
 func TestService_HistoricalByBlockNo(t *testing.T) {
-	block, err := s.HistoricalByBlockNo("0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae", 8000000)
+	block, err := s.HistoricalByBlockNo(common.HexToAddress("0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae"), 8000000)
 	if err != nil {
 		t.Error(err)
 	}

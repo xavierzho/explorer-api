@@ -2,6 +2,7 @@ package logs
 
 import (
 	"github.com/Jonescy/explorer-api"
+	"github.com/ethereum/go-ethereum/common"
 	"reflect"
 	"strings"
 )
@@ -67,14 +68,14 @@ func (p *Params) MarshalIntoMap() map[string]string {
 }
 
 type Log struct {
-	TimeStamp        string   `json:"timeStamp"`
-	GasUsed          string   `json:"gasUsed"`
-	Address          string   `json:"address"`
-	LogIndex         string   `json:"logIndex"`
-	Data             string   `json:"data"`
-	Topics           []string `json:"topics"`
-	BlockNumber      string   `json:"blockNumber"`
-	TransactionIndex string   `json:"transactionIndex"`
-	TransactionHash  string   `json:"transactionHash"`
-	GasPrice         string   `json:"gasPrice"`
+	TimeStamp        string         `json:"timeStamp"`
+	GasUsed          string         `json:"gasUsed"`
+	Address          common.Address `json:"address"`
+	LogIndex         string         `json:"logIndex"`
+	Data             string         `json:"data"`
+	Topics           []string       `json:"topics"`
+	BlockNumber      string         `json:"blockNumber"`
+	TransactionIndex string         `json:"transactionIndex"`
+	TransactionHash  common.Hash    `json:"transactionHash"`
+	GasPrice         string         `json:"gasPrice"`
 }

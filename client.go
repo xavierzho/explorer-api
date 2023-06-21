@@ -27,7 +27,7 @@ var defaultClient = &Client{
 type BeforeHook func(ctx context.Context, url string) error
 
 // AfterHook hook for calling after every request
-type AfterHook func(ctx context.Context, url string, err error)
+type AfterHook func(ctx context.Context, body []byte, err error)
 
 // Client explorer request client
 type Client struct {
@@ -73,7 +73,7 @@ func WithAPIKey(key string) ClientOption {
 // WithBaseURL is used to set the base url
 func WithBaseURL(url Network) ClientOption {
 	return func(client *Client) {
-		client.baseUrl = string(url)
+		client.baseUrl = url.String()
 	}
 }
 
@@ -173,7 +173,7 @@ func (c *Client) call(ctx context.Context, module, action string, param utils.M,
 	}
 
 	if c.AfterHook != nil {
-		c.AfterHook(ctx, link, err)
+		c.AfterHook(ctx, content.Bytes(), err)
 	}
 	return nil
 }

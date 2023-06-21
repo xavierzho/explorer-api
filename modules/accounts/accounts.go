@@ -2,6 +2,7 @@ package accounts
 
 import (
 	"github.com/Jonescy/explorer-api/modules"
+	"github.com/ethereum/go-ethereum/common"
 	"strconv"
 	"strings"
 
@@ -19,9 +20,9 @@ func (*Service) Name() string { return "account" }
 // description: https://docs.etherscan.io/api-endpoints/accounts#get-ether-balance-for-a-single-address
 //
 // Returns the Ether balance of a given address.
-func (s *Service) EtherBalance(address string) (balance *utils.BN, err error) {
+func (s *Service) EtherBalance(address common.Address) (balance *utils.BN, err error) {
 	err = s.Client.Call(s, "balance", utils.M{
-		"address": address,
+		"address": address.Hex(),
 	}, &balance)
 	return
 }
@@ -44,9 +45,9 @@ func (s *Service) MultiAccountBalance(addresses []string) (balances []Balance, e
 // description: https://docs.etherscan.io/api-endpoints/accounts#get-a-list-of-normal-transactions-by-address
 //
 // Returns the list of NormalTx performed by an address, with optional pagination.
-func (s *Service) NormalTxByAddress(address string, startBlock *int, endBlock *int, page int, offset int, desc bool) (txs []NormalTx, err error) {
+func (s *Service) NormalTxByAddress(address common.Address, startBlock *int, endBlock *int, page int, offset int, desc bool) (txs []NormalTx, err error) {
 	var m = utils.M{
-		"address": address,
+		"address": address.Hex(),
 		"page":    strconv.Itoa(page),
 		"offset":  strconv.Itoa(offset),
 	}
@@ -74,9 +75,9 @@ func (s *Service) NormalTxByAddress(address string, startBlock *int, endBlock *i
 // description: https://docs.etherscan.io/api-endpoints/accounts#get-a-list-of-internal-transactions-by-address
 //
 // Returns the list of InternalTx performed by an address, with optional pagination.
-func (s *Service) InternalTxByAddress(address string, startBlock *int, endBlock *int, page int, offset int, desc bool) (txs []InternalTx, err error) {
+func (s *Service) InternalTxByAddress(address common.Address, startBlock *int, endBlock *int, page int, offset int, desc bool) (txs []InternalTx, err error) {
 	var m = utils.M{
-		"address": address,
+		"address": address.Hex(),
 		"page":    strconv.Itoa(page),
 		"offset":  strconv.Itoa(offset),
 	}
@@ -102,9 +103,9 @@ func (s *Service) InternalTxByAddress(address string, startBlock *int, endBlock 
 // description: https://docs.etherscan.io/api-endpoints/accounts#get-internal-transactions-by-transaction-hash
 //
 // Returns the list of InternalTx performed within a transaction.
-func (s *Service) InternalTxsByHash(txHash string) (txs []InternalTx, err error) {
+func (s *Service) InternalTxsByHash(txHash common.Hash) (txs []InternalTx, err error) {
 	var m = utils.M{
-		"txhash": txHash,
+		"txhash": txHash.Hex(),
 	}
 	err = s.Client.Call(s, "txlistinternal", m, &txs)
 	return
@@ -136,9 +137,9 @@ func (s *Service) InternalTxsByBlockRange(startBlock int, endBlock int, page int
 // description: https://docs.etherscan.io/api-endpoints/accounts#get-a-list-of-erc20-token-transfer-events-by-address
 //
 // Returns the list of ERC20Transfer by an address, with optional filtering by token contract.
-func (s *Service) ERC20TransferEventsByAddress(address string, startBlock *int, endBlock *int, page int, offset int, desc bool) (txs []ERC20Transfer, err error) {
+func (s *Service) ERC20TransferEventsByAddress(address common.Address, startBlock *int, endBlock *int, page int, offset int, desc bool) (txs []ERC20Transfer, err error) {
 	var m = utils.M{
-		"address": address,
+		"address": address.Hex(),
 		"page":    strconv.Itoa(page),
 		"offset":  strconv.Itoa(offset),
 	}
@@ -164,9 +165,9 @@ func (s *Service) ERC20TransferEventsByAddress(address string, startBlock *int, 
 // description: https://docs.etherscan.io/api-endpoints/accounts#get-a-list-of-erc721-token-transfer-events-by-address
 //
 // Returns the list of ERC721Transfer by an address, with optional filtering by token contract.
-func (s *Service) ERC721TransferEventsByAddress(address string, startBlock *int, endBlock *int, page int, offset int, desc bool) (txs []ERC721Transfer, err error) {
+func (s *Service) ERC721TransferEventsByAddress(address common.Address, startBlock *int, endBlock *int, page int, offset int, desc bool) (txs []ERC721Transfer, err error) {
 	var m = utils.M{
-		"address": address,
+		"address": address.Hex(),
 		"page":    strconv.Itoa(page),
 		"offset":  strconv.Itoa(offset),
 	}
@@ -192,9 +193,9 @@ func (s *Service) ERC721TransferEventsByAddress(address string, startBlock *int,
 // description: https://docs.etherscan.io/api-endpoints/accounts#get-a-list-of-erc1155-token-transfer-events-by-address
 //
 // Returns the list of ERC1155Transfer by an address, with optional filtering by token contract.
-func (s *Service) ERC1155TransferEventsByAddress(address string, startBlock *int, endBlock *int, page int, offset int, desc bool) (txs []ERC1155Transfer, err error) {
+func (s *Service) ERC1155TransferEventsByAddress(address common.Address, startBlock *int, endBlock *int, page int, offset int, desc bool) (txs []ERC1155Transfer, err error) {
 	var m = utils.M{
-		"address": address,
+		"address": address.Hex(),
 		"page":    strconv.Itoa(page),
 		"offset":  strconv.Itoa(offset),
 	}
@@ -220,9 +221,9 @@ func (s *Service) ERC1155TransferEventsByAddress(address string, startBlock *int
 // description: https://docs.etherscan.io/api-endpoints/accounts#get-a-list-of-mined-blocks-by-address
 //
 // Returns the list of MinedBlock by an address, with optional pagination.
-func (s *Service) MinedBlocksByAddress(address string, page int, offset int) (blocks []MinedBlock, err error) {
+func (s *Service) MinedBlocksByAddress(address common.Address, page int, offset int) (blocks []MinedBlock, err error) {
 	var m = utils.M{
-		"address":   address,
+		"address":   address.Hex(),
 		"page":      strconv.Itoa(page),
 		"offset":    strconv.Itoa(offset),
 		"blocktype": "blocks",
@@ -236,9 +237,9 @@ func (s *Service) MinedBlocksByAddress(address string, page int, offset int) (bl
 // description: https://docs.etherscan.io/api-endpoints/accounts#get-historical-ether-balance-for-a-single-address-by-blockno
 //
 // Returns the balance of an address at a given block number.
-func (s *Service) HistoricalByBlockNo(address string, blockNo int) (balance HistoricalBalance, err error) {
+func (s *Service) HistoricalByBlockNo(address common.Address, blockNo int) (balance HistoricalBalance, err error) {
 	var m = utils.M{
-		"address": address,
+		"address": address.Hex(),
 		"blockno": strconv.Itoa(blockNo),
 	}
 	err = s.Client.Call(s, "balancehistory", m, &balance)
@@ -250,9 +251,9 @@ func (s *Service) HistoricalByBlockNo(address string, blockNo int) (balance Hist
 // description: https://docs.etherscan.io/api-endpoints/tokens#get-erc20-token-account-balance-for-tokencontractaddress
 //
 // Returns the current balance of an ERC-20 token of an address.
-func (s *Service) ERC20Balance(address string, contractAddress string) (balance *utils.BN, err error) {
+func (s *Service) ERC20Balance(address common.Address, contractAddress string) (balance *utils.BN, err error) {
 	err = s.Client.Call(s, "tokenbalance", utils.M{
-		"address":         address,
+		"address":         address.Hex(),
 		"contractaddress": contractAddress,
 	}, &balance)
 	return
@@ -263,10 +264,10 @@ func (s *Service) ERC20Balance(address string, contractAddress string) (balance 
 // description: https://docs.etherscan.io/api-endpoints/tokens#get-historical-erc20-token-account-balance-for-tokencontractaddress-by-blockno
 //
 // Returns the balance of an ERC-20 token of an address at a certain block height.
-func (s *Service) HistoricalERC20Balance(address string, contractAddress string, blockNo int) (balance HistoricalBalance, err error) {
+func (s *Service) HistoricalERC20Balance(address common.Address, contractAddress common.Address, blockNo int) (balance HistoricalBalance, err error) {
 	err = s.Client.Call(s, "tokenbalancehistory", utils.M{
-		"address":         address,
-		"contractaddress": contractAddress,
+		"address":         address.Hex(),
+		"contractaddress": contractAddress.Hex(),
 		"blockno":         strconv.Itoa(blockNo),
 	}, &balance)
 	return
@@ -277,7 +278,7 @@ func (s *Service) HistoricalERC20Balance(address string, contractAddress string,
 // description: https://docs.etherscan.io/api-endpoints/tokens#get-address-erc20-token-holding
 //
 // Returns the ERC-20 tokens and amount held by an address.
-func (s *Service) GetHoldingERC20Tokens(address string, page, offset *int) (tokens []HoldingERC20, err error) {
+func (s *Service) GetHoldingERC20Tokens(address common.Address, page, offset *int) (tokens []HoldingERC20, err error) {
 	if page == nil {
 		*page = 1
 	}
@@ -285,7 +286,7 @@ func (s *Service) GetHoldingERC20Tokens(address string, page, offset *int) (toke
 		*offset = 100
 	}
 	err = s.Client.Call(s, "addresstokenbalance", utils.M{
-		"address": address,
+		"address": address.Hex(),
 		"page":    strconv.Itoa(*page),
 		"offset":  strconv.Itoa(*offset),
 	}, &tokens)
@@ -297,7 +298,7 @@ func (s *Service) GetHoldingERC20Tokens(address string, page, offset *int) (toke
 // description: https://docs.etherscan.io/api-endpoints/tokens#get-address-erc721-token-holding
 //
 // Returns the ERC-721 tokens and amount held by an address.
-func (s *Service) GetHoldingERC721Tokens(address string, page, offset *int) (tokens []HoldingERC721, err error) {
+func (s *Service) GetHoldingERC721Tokens(address common.Address, page, offset *int) (tokens []HoldingERC721, err error) {
 	if page == nil {
 		*page = 1
 	}
@@ -305,7 +306,7 @@ func (s *Service) GetHoldingERC721Tokens(address string, page, offset *int) (tok
 		*offset = 100
 	}
 	err = s.Client.Call(s, "addresstokennftbalance", utils.M{
-		"address": address,
+		"address": address.Hex(),
 		"page":    strconv.Itoa(*page),
 		"offset":  strconv.Itoa(*offset),
 	}, &tokens)
@@ -317,7 +318,7 @@ func (s *Service) GetHoldingERC721Tokens(address string, page, offset *int) (tok
 // description: https://docs.etherscan.io/api-endpoints/tokens#get-address-erc721-token-inventory-by-contractaddress
 //
 // Returns the ERC-721 token inventory of an address, filtered by contract address.
-func (s *Service) GetERC721Inventory(wallet, contract string, page, offset *int) (tokens []ERC721Inventory, err error) {
+func (s *Service) GetERC721Inventory(wallet, contract common.Address, page, offset *int) (tokens []ERC721Inventory, err error) {
 	if page == nil {
 		*page = 1
 	}
@@ -325,10 +326,10 @@ func (s *Service) GetERC721Inventory(wallet, contract string, page, offset *int)
 		*offset = 100
 	}
 	err = s.Client.Call(s, "addresstokennftinventory", utils.M{
-		"address":         wallet,
+		"address":         wallet.Hex(),
 		"page":            strconv.Itoa(*page),
 		"offset":          strconv.Itoa(*offset),
-		"contractaddress": contract,
+		"contractaddress": contract.Hex(),
 	}, &tokens)
 	return
 }

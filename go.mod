@@ -2,4 +2,12 @@ module github.com/Jonescy/explorer-api
 
 go 1.20
 
-require golang.org/x/time v0.3.0
+require (
+	github.com/ethereum/go-ethereum v1.12.0
+	golang.org/x/time v0.3.0
+)
+
+require (
+	golang.org/x/crypto v0.1.0 // indirect
+	golang.org/x/sys v0.7.0 // indirect
+)
