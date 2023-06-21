@@ -2,9 +2,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/Jonescy/explorer-api"
-	"github.com/Jonescy/explorer-api/account"
+	"net/http"
 	"sync"
+
+	"github.com/Jonescy/explorer-api"
+	"github.com/Jonescy/explorer-api/modules/accounts"
 )
 
 func main() {
@@ -12,9 +14,12 @@ func main() {
 		explorer.WithAPIKey("YourApiKeyToken"),
 		explorer.WithBaseURL(explorer.Ethereum),
 		// sub one to avoid hitting the limit
-		explorer.WithLimitTier(explorer.TierFree-1))
+		explorer.WithLimitTier(explorer.TierFree-1),
+		explorer.WithHTTPClient(http.DefaultClient),
+		explorer.WithTimeout(0),
+	)
 	var wg sync.WaitGroup
-	service := account.Service{Client: client}
+	service := accounts.Service{Client: client}
 	// using the same client to call the same endpoint concurrently, testing the rate limit
 	for i := 0; i < 20; i++ {
 		wg.Add(1)

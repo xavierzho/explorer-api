@@ -11,58 +11,73 @@ import (
 	"net/url"
 	"time"
 
+	"github.com/Jonescy/explorer-api/utils"
+
 	"golang.org/x/time/rate"
 )
 
-var defaultClient = NewClient(
-	WithLimitTier(5),
-	WithHTTPClient(http.DefaultClient),
-	WithTimeout(10*time.Second),
-	WithAPIKey(""),
-	WithBaseURL(Ethereum),
-)
+// defaultClient default explorer client
+var defaultClient = &Client{
+	conn:    http.DefaultClient,
+	baseUrl: Ethereum.String(),
+	limiter: rate.NewLimiter(rate.Every(time.Second), 1),
+}
 
+// BeforeHook hook for calling before every request
 type BeforeHook func(ctx context.Context, url string) error
+
+// AfterHook hook for calling after every request
 type AfterHook func(ctx context.Context, url string, err error)
 
+// Client explorer request client
 type Client struct {
 	conn       *http.Client
 	key        string
 	baseUrl    string
 	limiter    *rate.Limiter
-	beforeHook BeforeHook
-	afterHook  AfterHook
+	BeforeHook BeforeHook
+	AfterHook  AfterHook
 }
 
+// ClientOption client option
 type ClientOption func(client *Client)
 
+// WithLimitTier is used to set the rate limit tier
 func WithLimitTier(limit Tier) ClientOption {
 	return func(client *Client) {
 		client.limiter = rate.NewLimiter(rate.Every(time.Second), int(limit))
 	}
 }
+
+// WithHTTPClient is used to set the http client
 func WithHTTPClient(conn *http.Client) ClientOption {
 	return func(client *Client) {
 		client.conn = conn
 	}
 }
+
+// WithTimeout is used to set the before hook
 func WithTimeout(timeout time.Duration) ClientOption {
 	return func(client *Client) {
 		client.conn.Timeout = timeout
 	}
 }
 
+// WithAPIKey is used to set the api key
 func WithAPIKey(key string) ClientOption {
 	return func(client *Client) {
 		client.key = key
 	}
 }
+
+// WithBaseURL is used to set the base url
 func WithBaseURL(url Network) ClientOption {
 	return func(client *Client) {
 		client.baseUrl = string(url)
 	}
 }
 
+// NewClient new explorer client
 func NewClient(opts ...ClientOption) *Client {
 	c := defaultClient
 	for _, opt := range opts {
@@ -74,18 +89,23 @@ func NewClient(opts ...ClientOption) *Client {
 	return c
 }
 
-func (c *Client) Call(module, action string, param map[string]string, outcome any) error {
+// Call http call
+func (c *Client) Call(module Module, action string, param utils.M, outcome any) error {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
+	return c.call(ctx, module.Name(), action, param, outcome)
+}
+
+// CallWithContext http call with context
+func (c *Client) CallWithContext(ctx context.Context, module, action string, param utils.M, outcome any) error {
 	return c.call(ctx, module, action, param, outcome)
 }
-func (c *Client) CallWithContext(ctx context.Context, module, action string, param map[string]string, outcome any) error {
-	return c.call(ctx, module, action, param, outcome)
-}
-func (c *Client) call(ctx context.Context, module, action string, param map[string]string, outcome any) error {
+
+func (c *Client) call(ctx context.Context, module, action string, param utils.M, outcome any) error {
+	// build request url
 	link := c.buildURL(module, action, param)
-	if c.beforeHook != nil {
-		err := c.beforeHook(ctx, link)
+	if c.BeforeHook != nil {
+		err := c.BeforeHook(ctx, link)
 		if err != nil {
 			return err
 		}
@@ -96,11 +116,12 @@ func (c *Client) call(ctx context.Context, module, action string, param map[stri
 			fmt.Printf("[ouch! panic recovered] please report this with what you did and what you expected, panic detail: %v\n", r)
 		}
 	}()
-
+	// build request with context
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, link, nil)
 	if err != nil {
 		return err
 	}
+	// do request with rate limit
 	err = c.limiter.Wait(ctx)
 	if err != nil {
 		return err
@@ -109,31 +130,36 @@ func (c *Client) call(ctx context.Context, module, action string, param map[stri
 	if err != nil {
 		return err
 	}
+	// safety close response body
 	defer func(Body io.ReadCloser) {
 		if err := Body.Close(); err != nil {
 			fmt.Printf("error closing response body: %v\n", err)
 		}
 	}(resp.Body)
+	// read response body
 	var content bytes.Buffer
 	if _, err = io.Copy(&content, resp.Body); err != nil {
-		//err = utils.wrapErr(err, "reading response")
 		return err
 	}
-
+	// check status code
 	if resp.StatusCode != http.StatusOK {
 		err = fmt.Errorf("response status %v %s, response body: %s", resp.StatusCode, resp.Status, content.String())
 		return err
 	}
+	fmt.Println("response body", content.String())
 
+	// unmarshal response body
 	var envelope Envelope
 	err = json.Unmarshal(content.Bytes(), &envelope)
 	if err != nil {
-		//err = utils.wrapErr(err, "json unmarshal envelope")
 		return err
 	}
-	if envelope.Status != 1 {
+	if envelope.Status != 1 && envelope.ID == 0 && envelope.JSONRPC != "2.0" {
 		err = fmt.Errorf("etherscan server: %s", envelope.Message)
 		return err
+	}
+	if envelope.Result == nil {
+		return fmt.Errorf("rpc error, %s", envelope.Error.Message)
 	}
 
 	// workaround for missing tokenDecimal for some tokentx calls
@@ -143,12 +169,11 @@ func (c *Client) call(ctx context.Context, module, action string, param map[stri
 		err = json.Unmarshal(envelope.Result, outcome)
 	}
 	if err != nil {
-		//err = utils.wrapErr(err, "json unmarshal outcome")
 		return err
 	}
 
-	if c.afterHook != nil {
-		c.afterHook(ctx, link, err)
+	if c.AfterHook != nil {
+		c.AfterHook(ctx, link, err)
 	}
 	return nil
 }
@@ -164,7 +189,7 @@ func (c *Client) validate() error {
 	}
 	return nil
 }
-func (c *Client) buildURL(module, action string, param map[string]string) (URL string) {
+func (c *Client) buildURL(module, action string, param utils.M) (URL string) {
 	q := make(url.Values)
 	q.Add("module", module)
 	q.Add("action", action)
@@ -175,6 +200,7 @@ func (c *Client) buildURL(module, action string, param map[string]string) (URL s
 	return fmt.Sprintf("https://%s/api?%s", c.baseUrl, q.Encode())
 }
 
+// Post post method for client
 func (c *Client) Post(url string, body io.Reader) (resp *http.Response, err error) {
 	return c.conn.Post(url, "application/json", body)
 }

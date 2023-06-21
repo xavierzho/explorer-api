@@ -11,5 +11,10 @@ type Envelope struct {
 	// OK for good, other words when Status equals 0
 	Message string `json:"message,omitempty"`
 	// where response lies
-	Result json.RawMessage `json:"result"`
+	Result json.RawMessage `json:"result,omitempty"`
+	// where error lies
+	Error struct {
+		Code    int    `json:"code,omitempty"`
+		Message string `json:"message,omitempty"`
+	} `json:"error,omitempty"`
 }
