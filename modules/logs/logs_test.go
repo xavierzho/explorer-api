@@ -3,6 +3,7 @@ package logs
 import (
 	"fmt"
 	"github.com/Jonescy/explorer-api"
+	"github.com/ethereum/go-ethereum/common"
 	"testing"
 )
 
@@ -39,7 +40,7 @@ func TestGetLogs(t *testing.T) {
 	}
 	t.Log(len(res))
 	t.Logf("%+v", res)
-	if res[0].TransactionHash != "0x26fe1a0a403fd44ef11ee72f3b4ceff590b6ea533684cb279cb4242be463304c" {
+	if res[0].TransactionHash != common.HexToHash("0x26fe1a0a403fd44ef11ee72f3b4ceff590b6ea533684cb279cb4242be463304c") {
 		t.Error("TransactionHash is not correct")
 	}
 }

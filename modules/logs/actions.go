@@ -73,7 +73,7 @@ type Log struct {
 	Address          common.Address `json:"address"`
 	LogIndex         string         `json:"logIndex"`
 	Data             string         `json:"data"`
-	Topics           []string       `json:"topics"`
+	Topics           []common.Hash  `json:"topics"`
 	BlockNumber      string         `json:"blockNumber"`
 	TransactionIndex string         `json:"transactionIndex"`
 	TransactionHash  common.Hash    `json:"transactionHash"`
