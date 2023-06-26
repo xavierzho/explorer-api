@@ -91,7 +91,7 @@ func TestGetTxReceipt(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	t.Log(res)
+	t.Log(res.Logs[0].Topics)
 }
 
 func TestEthCall(t *testing.T) {

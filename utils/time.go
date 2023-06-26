@@ -11,7 +11,7 @@ type Time time.Time
 
 // UnmarshalText implements the encoding.TextUnmarshaler interface.
 func (t *Time) UnmarshalText(text []byte) (err error) {
-	input, err := strconv.ParseInt(string(text), 10, 64)
+	input, err := strconv.ParseInt(string(text), 0, 64)
 	if err != nil {
 		return
 	}

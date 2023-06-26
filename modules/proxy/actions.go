@@ -126,7 +126,7 @@ type TxReceipt struct {
 		LogIndex         string         `json:"logIndex"`
 		Data             string         `json:"data"`
 		Removed          bool           `json:"removed"`
-		Topics           []string       `json:"topics"`
+		Topics           []common.Hash  `json:"topics"`
 		BlockNumber      utils.BN       `json:"blockNumber"`
 		TransactionIndex string         `json:"transactionIndex"`
 		TransactionHash  common.Hash    `json:"transactionHash"`
