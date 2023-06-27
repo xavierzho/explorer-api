@@ -34,6 +34,7 @@ type Client struct {
 	conn       *http.Client
 	key        string
 	baseUrl    string
+	verbose    bool
 	limiter    *rate.Limiter
 	BeforeHook BeforeHook
 	AfterHook  AfterHook
@@ -74,6 +75,13 @@ func WithAPIKey(key string) ClientOption {
 func WithBaseURL(url Network) ClientOption {
 	return func(client *Client) {
 		client.baseUrl = url.String()
+	}
+}
+
+// WithVerbose is used to set the verbose
+func WithVerbose() ClientOption {
+	return func(client *Client) {
+		client.verbose = true
 	}
 }
 
@@ -146,7 +154,9 @@ func (c *Client) call(ctx context.Context, module, action string, param utils.M,
 		err = fmt.Errorf("response status %v %s, response body: %s", resp.StatusCode, resp.Status, content.String())
 		return err
 	}
-	fmt.Println("response body", content.String())
+	if c.verbose {
+		fmt.Println("response body", content.String())
+	}
 
 	// unmarshal response body
 	var envelope Envelope
