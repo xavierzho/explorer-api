@@ -27,14 +27,13 @@ var defaultClient = &Client{
 type BeforeHook func(ctx context.Context, url string) error
 
 // AfterHook hook for calling after every request
-type AfterHook func(ctx context.Context, body []byte, err error)
+type AfterHook func(ctx context.Context, body []byte)
 
 // Client explorer request client
 type Client struct {
 	conn       *http.Client
 	key        string
 	baseUrl    string
-	verbose    bool
 	limiter    *rate.Limiter
 	BeforeHook BeforeHook
 	AfterHook  AfterHook
@@ -78,13 +77,6 @@ func WithBaseURL(url Network) ClientOption {
 	}
 }
 
-// WithVerbose is used to set the verbose
-func WithVerbose() ClientOption {
-	return func(client *Client) {
-		client.verbose = true
-	}
-}
-
 // NewClient new explorer client
 func NewClient(opts ...ClientOption) *Client {
 	c := defaultClient
@@ -110,6 +102,10 @@ func (c *Client) CallWithContext(ctx context.Context, module, action string, par
 }
 
 func (c *Client) call(ctx context.Context, module, action string, param utils.M, outcome any) error {
+	var (
+		content bytes.Buffer
+		err     error
+	)
 	// build request url
 	link := c.buildURL(module, action, param)
 	if c.BeforeHook != nil {
@@ -118,7 +114,8 @@ func (c *Client) call(ctx context.Context, module, action string, param utils.M,
 			return err
 		}
 	}
-	// recover if there shall be an panic
+
+	// recover if there shall be a panic
 	defer func() {
 		if r := recover(); r != nil {
 			fmt.Printf("[ouch! panic recovered] please report this with what you did and what you expected, panic detail: %v\n", r)
@@ -145,7 +142,6 @@ func (c *Client) call(ctx context.Context, module, action string, param utils.M,
 		}
 	}(resp.Body)
 	// read response body
-	var content bytes.Buffer
 	if _, err = io.Copy(&content, resp.Body); err != nil {
 		return err
 	}
@@ -154,10 +150,6 @@ func (c *Client) call(ctx context.Context, module, action string, param utils.M,
 		err = fmt.Errorf("response status %v %s, response body: %s", resp.StatusCode, resp.Status, content.String())
 		return err
 	}
-	if c.verbose {
-		fmt.Println("response body", content.String())
-	}
-
 	// unmarshal response body
 	var envelope Envelope
 	err = json.Unmarshal(content.Bytes(), &envelope)
@@ -172,18 +164,13 @@ func (c *Client) call(ctx context.Context, module, action string, param utils.M,
 		return fmt.Errorf("rpc error, %s", envelope.Error.Message)
 	}
 
-	// workaround for missing tokenDecimal for some tokentx calls
-	if action == "tokentx" {
-		err = json.Unmarshal(bytes.Replace(envelope.Result, []byte(`"tokenDecimal":""`), []byte(`"tokenDecimal":"0"`), -1), outcome)
-	} else {
-		err = json.Unmarshal(envelope.Result, outcome)
-	}
+	// unmarshal result
+	err = json.Unmarshal(envelope.Result, outcome)
 	if err != nil {
 		return err
 	}
-
 	if c.AfterHook != nil {
-		c.AfterHook(ctx, content.Bytes(), err)
+		c.AfterHook(ctx, content.Bytes())
 	}
 	return nil
 }
@@ -210,7 +197,7 @@ func (c *Client) buildURL(module, action string, param utils.M) (URL string) {
 	return fmt.Sprintf("https://%s/api?%s", c.baseUrl, q.Encode())
 }
 
-// Post post method for client
+// Post method post for client
 func (c *Client) Post(url string, body io.Reader) (resp *http.Response, err error) {
 	return c.conn.Post(url, "application/json", body)
 }

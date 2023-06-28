@@ -1,9 +1,12 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"sync"
+
+	"github.com/ethereum/go-ethereum/common"
 
 	"github.com/Jonescy/explorer-api"
 	"github.com/Jonescy/explorer-api/modules/accounts"
@@ -18,6 +21,12 @@ func main() {
 		explorer.WithHTTPClient(http.DefaultClient),
 		explorer.WithTimeout(0),
 	)
+
+	client.AfterHook = func(ctx context.Context, body []byte) {
+		fmt.Println("after hook")
+		// verbose the response body
+		fmt.Println("body", string(body))
+	}
 	var wg sync.WaitGroup
 	service := accounts.Service{Client: client}
 	// using the same client to call the same endpoint concurrently, testing the rate limit
@@ -26,9 +35,9 @@ func main() {
 		go func(idx int) {
 			defer wg.Done()
 
-			balance, err := service.EtherBalance("0xBE0eB53F46cd790Cd13851d5EFf43D12404d33E8")
+			balance, err := service.EtherBalance(common.HexToAddress("0xBE0eB53F46cd790Cd13851d5EFf43D12404d33E8"))
 			if err != nil {
-				fmt.Println("has some error", err)
+				//fmt.Println("has some error", err)
 				return
 			}
 
