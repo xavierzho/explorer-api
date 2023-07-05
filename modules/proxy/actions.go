@@ -30,21 +30,21 @@ type Block struct {
 	ExtraData       string      `json:"extraData"`
 	BaseFeePerGas   utils.BN    `json:"baseFeePerGas"`
 	Transactions    []struct {
-		BlockHash        common.Hash    `json:"blockHash"`
-		TransactionIndex string         `json:"transactionIndex"`
-		Type             string         `json:"type"`
-		Nonce            string         `json:"nonce"`
-		Input            string         `json:"input"`
-		R                string         `json:"r"`
-		S                string         `json:"s"`
-		V                string         `json:"v"`
-		BlockNumber      string         `json:"blockNumber"`
-		Gas              utils.BN       `json:"gas"`
-		From             common.Address `json:"from"`
-		To               common.Address `json:"to"`
-		Value            utils.BN       `json:"value"`
-		Hash             common.Hash    `json:"hash"`
-		GasPrice         utils.BN       `json:"gasPrice"`
+		BlockHash        common.Hash     `json:"blockHash"`
+		TransactionIndex string          `json:"transactionIndex"`
+		Type             string          `json:"type"`
+		Nonce            string          `json:"nonce"`
+		Input            string          `json:"input"`
+		R                string          `json:"r"`
+		S                string          `json:"s"`
+		V                string          `json:"v"`
+		BlockNumber      string          `json:"blockNumber"`
+		Gas              utils.BN        `json:"gas"`
+		From             common.Address  `json:"from"`
+		To               *common.Address `json:"to"`
+		Value            utils.BN        `json:"value"`
+		Hash             common.Hash     `json:"hash"`
+		GasPrice         utils.BN        `json:"gasPrice"`
 	} `json:"transactions"`
 	Nonce            utils.BN       `json:"nonce"`
 	Miner            common.Address `json:"miner"`
