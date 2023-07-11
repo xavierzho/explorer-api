@@ -1,7 +1,7 @@
 package contracts
 
 import (
-	"github.com/xavierzho/explorer-api/modules"
+	"github.com/Jonescy/explorer-api/modules"
 	"strings"
 )
 

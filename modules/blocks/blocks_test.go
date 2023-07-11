@@ -1,7 +1,7 @@
 package blocks
 
 import (
-	"github.com/xavierzho/explorer-api"
+	"github.com/Jonescy/explorer-api"
 	"testing"
 )
 

@@ -1,4 +1,4 @@
-module github.com/xavierzho/explorer-api
+module github.com/Jonescy/explorer-api
 
 go 1.20
 

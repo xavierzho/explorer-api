@@ -1,8 +1,8 @@
 # Etherscan explorer API
 
-[![GoDoc](https://godoc.org/github.com/xavierzho/explorer-api?status.svg)](https://godoc.org/github.com/xavierzho/explorer-api)
-[![Go Report Card](https://goreportcard.com/badge/github.com/xavierzho/explorer-api)](https://goreportcard.com/report/github.com/xavierzho/explorer-api)
-![License](https://img.shields.io/github/license/xavierzho/explorer-api.svg)
+[![GoDoc](https://godoc.org/github.com/Jonescy/explorer-api?status.svg)](https://godoc.org/github.com/Jonescy/explorer-api)
+[![Go Report Card](https://goreportcard.com/badge/github.com/Jonescy/explorer-api)](https://goreportcard.com/report/github.com/Jonescy/explorer-api)
+![License](https://img.shields.io/github/license/Jonescy/explorer-api.svg)
 
 Golang client for the Etherscan.io API(and its families like BscScan). with nearly full implementation(accounts, transactions, tokens, contracts, blocks, stats), full network support(Mainnet, Ropsten, Kovan, Rinkby, Goerli, Tobalaba), and depending on `go-ethereum/common`.
 
@@ -10,7 +10,7 @@ Golang client for the Etherscan.io API(and its families like BscScan). with near
 # Usage
 
 ```bash
-go get github.com/xavierzho/explorer-api
+go get github.com/Jonescy/explorer-api
 ```
 
 Create an API instance and off you go.
@@ -19,12 +19,12 @@ Create an API instance and off you go.
 package main
 
 import (
-	"github.com/xavierzho/explorer-api/modules/logs"
+	"github.com/Jonescy/explorer-api/modules/logs"
 	"net/http"
 	"context"
 
-	"github.com/xavierzho/explorer-api"
-	"github.com/xavierzho/explorer-api/modules/accounts"
+	"github.com/Jonescy/explorer-api"
+	"github.com/Jonescy/explorer-api/modules/accounts"
 )
 
 func main() {
@@ -62,7 +62,7 @@ func main() {
 ```
 other usage example on `examples/` folder.
 
-You may find full method list at [GoDoc](https://pkg.go.dev/github.com/xavierzho/explorer-api).
+You may find full method list at [GoDoc](https://pkg.go.dev/github.com/Jonescy/explorer-api).
 
 # Etherscan API Key
 

@@ -1,8 +1,8 @@
 package blocks
 
 import (
-	"github.com/xavierzho/explorer-api"
-	"github.com/xavierzho/explorer-api/utils"
+	"github.com/Jonescy/explorer-api"
+	"github.com/Jonescy/explorer-api/utils"
 )
 
 type ProAction interface {

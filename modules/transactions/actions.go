@@ -1,6 +1,6 @@
 package transactions
 
-import "github.com/xavierzho/explorer-api"
+import "github.com/Jonescy/explorer-api"
 
 type Action interface {
 	explorer.Module
