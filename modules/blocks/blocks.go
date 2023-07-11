@@ -1,8 +1,8 @@
 package blocks
 
 import (
-	"github.com/Jonescy/explorer-api/modules"
-	"github.com/Jonescy/explorer-api/utils"
+	"github.com/xavierzho/explorer-api/modules"
+	"github.com/xavierzho/explorer-api/utils"
 	"strconv"
 )
 

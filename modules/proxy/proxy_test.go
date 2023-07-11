@@ -2,14 +2,13 @@ package proxy
 
 import (
 	"fmt"
+	"github.com/xavierzho/explorer-api"
 	"strconv"
 	"testing"
 
 	"github.com/ethereum/go-ethereum/common"
 
-	"github.com/Jonescy/explorer-api/utils"
-
-	"github.com/Jonescy/explorer-api"
+	"github.com/xavierzho/explorer-api/utils"
 )
 
 var client = explorer.NewClient(explorer.WithAPIKey("3T44IRF46WQUF4MQXIE2AYIFRSGCTNYAMS"),
