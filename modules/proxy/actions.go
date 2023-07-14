@@ -86,40 +86,40 @@ type Uncle struct {
 }
 
 type Tx struct {
-	BlockHash            common.Hash    `json:"blockHash"`
-	AccessList           []interface{}  `json:"accessList"`
-	TransactionIndex     utils.BN       `json:"transactionIndex"`
-	Type                 string         `json:"type"`
-	Nonce                utils.BN       `json:"nonce"`
-	Input                string         `json:"input"`
-	R                    string         `json:"r"`
-	S                    string         `json:"s"`
-	ChainID              utils.BN       `json:"chainId"`
-	V                    string         `json:"v"`
-	BlockNumber          string         `json:"blockNumber"`
-	Gas                  utils.BN       `json:"gas"`
-	MaxPriorityFeePerGas utils.BN       `json:"maxPriorityFeePerGas"`
-	From                 common.Address `json:"from"`
-	To                   common.Address `json:"to"`
-	MaxFeePerGas         utils.BN       `json:"maxFeePerGas"`
-	Value                string         `json:"value"`
-	Hash                 common.Hash    `json:"hash"`
-	GasPrice             utils.BN       `json:"gasPrice"`
+	BlockHash            common.Hash     `json:"blockHash"`
+	AccessList           []interface{}   `json:"accessList"`
+	TransactionIndex     utils.BN        `json:"transactionIndex"`
+	Type                 string          `json:"type"`
+	Nonce                utils.BN        `json:"nonce"`
+	Input                string          `json:"input"`
+	R                    string          `json:"r"`
+	S                    string          `json:"s"`
+	ChainID              utils.BN        `json:"chainId"`
+	V                    string          `json:"v"`
+	BlockNumber          string          `json:"blockNumber"`
+	Gas                  utils.BN        `json:"gas"`
+	MaxPriorityFeePerGas utils.BN        `json:"maxPriorityFeePerGas"`
+	From                 common.Address  `json:"from"`
+	To                   *common.Address `json:"to"`
+	MaxFeePerGas         utils.BN        `json:"maxFeePerGas"`
+	Value                string          `json:"value"`
+	Hash                 common.Hash     `json:"hash"`
+	GasPrice             utils.BN        `json:"gasPrice"`
 }
 
 type TxReceipt struct {
-	BlockHash         common.Hash    `json:"blockHash"`
-	LogsBloom         string         `json:"logsBloom"`
-	ContractAddress   string         `json:"contractAddress"`
-	TransactionIndex  string         `json:"transactionIndex"`
-	Type              string         `json:"type"`
-	TransactionHash   common.Hash    `json:"transactionHash"`
-	GasUsed           utils.BN       `json:"gasUsed"`
-	BlockNumber       utils.BN       `json:"blockNumber"`
-	CumulativeGasUsed utils.BN       `json:"cumulativeGasUsed"`
-	From              common.Address `json:"from"`
-	To                common.Address `json:"to"`
-	EffectiveGasPrice utils.BN       `json:"effectiveGasPrice"`
+	BlockHash         common.Hash     `json:"blockHash"`
+	LogsBloom         string          `json:"logsBloom"`
+	ContractAddress   string          `json:"contractAddress"`
+	TransactionIndex  string          `json:"transactionIndex"`
+	Type              string          `json:"type"`
+	TransactionHash   common.Hash     `json:"transactionHash"`
+	GasUsed           utils.BN        `json:"gasUsed"`
+	BlockNumber       utils.BN        `json:"blockNumber"`
+	CumulativeGasUsed utils.BN        `json:"cumulativeGasUsed"`
+	From              common.Address  `json:"from"`
+	To                *common.Address `json:"to"`
+	EffectiveGasPrice utils.BN        `json:"effectiveGasPrice"`
 	Logs              []struct {
 		BlockHash        common.Hash    `json:"blockHash"`
 		Address          common.Address `json:"address"`
