@@ -29,10 +29,10 @@ type Reward struct {
 		Miner         string `json:"miner"`
 		BlockReward   string `json:"blockreward"`
 	} `json:"uncles"`
-	BlockNumber          string `json:"blockNumber"`
-	UncleInclusionReward string `json:"uncleInclusionReward"`
-	BlockReward          string `json:"blockReward"`
-	BlockMiner           string `json:"blockMiner"`
+	BlockNumber          utils.BN `json:"blockNumber"`
+	UncleInclusionReward string   `json:"uncleInclusionReward"`
+	BlockReward          string   `json:"blockReward"`
+	BlockMiner           string   `json:"blockMiner"`
 }
 
 type CountDown struct {

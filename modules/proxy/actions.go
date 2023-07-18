@@ -38,7 +38,7 @@ type Block struct {
 		R                string          `json:"r"`
 		S                string          `json:"s"`
 		V                string          `json:"v"`
-		BlockNumber      string          `json:"blockNumber"`
+		BlockNumber      utils.BN        `json:"blockNumber"`
 		Gas              utils.BN        `json:"gas"`
 		From             common.Address  `json:"from"`
 		To               *common.Address `json:"to"`

@@ -2,6 +2,7 @@ package logs
 
 import (
 	"github.com/Jonescy/explorer-api"
+	"github.com/Jonescy/explorer-api/utils"
 	"github.com/ethereum/go-ethereum/common"
 	"reflect"
 	"strings"
@@ -74,7 +75,7 @@ type Log struct {
 	LogIndex         string         `json:"logIndex"`
 	Data             string         `json:"data"`
 	Topics           []common.Hash  `json:"topics"`
-	BlockNumber      string         `json:"blockNumber"`
+	BlockNumber      utils.BN       `json:"blockNumber"`
 	TransactionIndex string         `json:"transactionIndex"`
 	TransactionHash  common.Hash    `json:"transactionHash"`
 	GasPrice         string         `json:"gasPrice"`
