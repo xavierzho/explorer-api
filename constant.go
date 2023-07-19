@@ -1,6 +1,6 @@
 package explorer
 
-// Tier is the tier of the API key.
+// Tier is the tier of the API APIKey.
 //
 // If using custom tier usage: Tier(custom limit).
 type Tier int

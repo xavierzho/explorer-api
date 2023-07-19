@@ -32,7 +32,7 @@ type AfterHook func(ctx context.Context, body []byte)
 // Client explorer request client
 type Client struct {
 	conn       *http.Client
-	key        string
+	APIKey     string
 	baseUrl    string
 	limiter    *rate.Limiter
 	BeforeHook BeforeHook
@@ -63,10 +63,10 @@ func WithTimeout(timeout time.Duration) ClientOption {
 	}
 }
 
-// WithAPIKey is used to set the api key
+// WithAPIKey is used to set the api APIKey
 func WithAPIKey(key string) ClientOption {
 	return func(client *Client) {
-		client.key = key
+		client.APIKey = key
 	}
 }
 
@@ -79,14 +79,14 @@ func WithBaseURL(url Network) ClientOption {
 
 // NewClient new explorer client
 func NewClient(opts ...ClientOption) *Client {
-	c := defaultClient
+	c := *defaultClient
 	for _, opt := range opts {
-		opt(c)
+		opt(&c)
 	}
 	if err := c.validate(); err != nil {
 		return nil
 	}
-	return c
+	return &c
 }
 
 // Call http call
@@ -175,8 +175,8 @@ func (c *Client) call(ctx context.Context, module, action string, param utils.M,
 	return nil
 }
 func (c *Client) validate() error {
-	if c.key == "" {
-		return errors.New("api key is required for Client")
+	if c.APIKey == "" {
+		return errors.New("api APIKey is required for Client")
 	}
 	if c.limiter == nil {
 		return errors.New("rate limiter is required for Client")
@@ -190,7 +190,7 @@ func (c *Client) buildURL(module, action string, param utils.M) (URL string) {
 	q := make(url.Values)
 	q.Add("module", module)
 	q.Add("action", action)
-	q.Add("apikey", c.key)
+	q.Add("apikey", c.APIKey)
 	for k, v := range param {
 		q.Add(k, v)
 	}
