@@ -6,5 +6,5 @@
 // (Mainnet, Ropsten, Kovan, Rinkby, Tobalaba, BSC, BSC Testnet, Polygon, Fantom, Arbitrum)
 // and only depending on standard library.
 //
-// Example can be found at https://github.com/Jonescy/etherscan-api
+// Example can be found at https://github.com/xavierzho/etherscan-api
 package explorer
