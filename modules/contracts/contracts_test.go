@@ -1,7 +1,7 @@
 package contracts
 
 import (
-	"github.com/Jonescy/explorer-api"
+	"github.com/xavierzho/explorer-api"
 	"testing"
 )
 

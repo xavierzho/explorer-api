@@ -1,7 +1,7 @@
 package transactions
 
 import (
-	"github.com/Jonescy/explorer-api/modules"
+	"github.com/xavierzho/explorer-api/modules"
 )
 
 type Service modules.Service

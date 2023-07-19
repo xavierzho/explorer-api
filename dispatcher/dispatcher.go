@@ -1,7 +1,7 @@
 package dispatcher
 
 import (
-	"github.com/Jonescy/explorer-api"
+	"github.com/xavierzho/explorer-api"
 	"sync"
 )
 

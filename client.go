@@ -11,7 +11,7 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/Jonescy/explorer-api/utils"
+	"github.com/xavierzho/explorer-api/utils"
 
 	"golang.org/x/time/rate"
 )

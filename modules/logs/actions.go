@@ -1,9 +1,9 @@
 package logs
 
 import (
-	"github.com/Jonescy/explorer-api"
-	"github.com/Jonescy/explorer-api/utils"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/xavierzho/explorer-api"
+	"github.com/xavierzho/explorer-api/utils"
 	"reflect"
 	"strings"
 )
