@@ -40,7 +40,7 @@ func (d *Dispatcher) Append(client *explorer.Client) {
 
 // Next return a client
 func (d *Dispatcher) Next() *explorer.Client {
-	d.mux.RLocker()
+	d.mux.RLock()
 	defer d.mux.RUnlock()
 	if d.len == 0 {
 		return nil
