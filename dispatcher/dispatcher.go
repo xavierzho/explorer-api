@@ -9,7 +9,7 @@ type Dispatcher struct {
 	clients  []*explorer.Client
 	len      int
 	roulette int
-	mux      sync.Mutex
+	mux      sync.RWMutex
 }
 
 // New create a dispatcher with clients
@@ -40,17 +40,18 @@ func (d *Dispatcher) Append(client *explorer.Client) {
 
 // Next return a client
 func (d *Dispatcher) Next() *explorer.Client {
-	d.mux.Lock()
-	defer d.mux.Unlock()
+	d.mux.RLocker()
+	defer d.mux.RUnlock()
 	if d.len == 0 {
 		return nil
 	}
 	if d.len == 1 {
 		return d.clients[0]
 	}
+	client := d.clients[d.roulette%d.len]
 	d.roulette++
 	if d.roulette >= d.len {
 		d.roulette = 0
 	}
-	return d.clients[d.roulette]
+	return client
 }
