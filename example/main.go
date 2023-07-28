@@ -30,7 +30,7 @@ func main() {
 	var wg sync.WaitGroup
 	service := accounts.Service{Client: client}
 	// using the same client to call the same endpoint concurrently, testing the rate limit
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 1000; i++ {
 		wg.Add(1)
 		go func(idx int) {
 			defer wg.Done()

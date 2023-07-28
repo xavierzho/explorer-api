@@ -14,18 +14,14 @@ type Dispatcher struct {
 
 // New create a dispatcher with clients
 // need keys calc formula = qps / Tier
-func New(keys []string) *Dispatcher {
+func New(keys []string, opts ...explorer.ClientOption) *Dispatcher {
 	if len(keys) < 1 {
 		return nil
 	}
 	var dispatcher = new(Dispatcher)
 	dispatcher.clients = make([]*explorer.Client, 0, len(keys))
 	for _, key := range keys {
-		cli := explorer.NewClient(
-			explorer.WithAPIKey(key),
-			explorer.WithLimitTier(explorer.TierFree),
-			explorer.WithBaseURL(explorer.Ethereum),
-		)
+		cli := explorer.NewClient(append(opts, explorer.WithAPIKey(key))...)
 		dispatcher.Append(cli)
 	}
 	return dispatcher
