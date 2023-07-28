@@ -11,7 +11,7 @@ package explorer
 
 import "fmt"
 
-const Version = "v1.1.3"
+const Version = "v1.1.4"
 
 func init() {
 	fmt.Println("explorer-api version:", Version)
