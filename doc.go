@@ -8,3 +8,11 @@
 //
 // Example can be found at https://github.com/xavierzho/etherscan-api
 package explorer
+
+import "fmt"
+
+const Version = "v1.1.1"
+
+func init() {
+	fmt.Println("explorer-api version:", Version)
+}

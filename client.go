@@ -129,6 +129,7 @@ func (c *Client) call(ctx context.Context, module, action string, param utils.M,
 	// do request with rate limit
 	err = c.limiter.Wait(ctx)
 	if err != nil {
+		fmt.Println("rate limiter wait error:", err)
 		return err
 	}
 	resp, err := c.conn.Do(req)

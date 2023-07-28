@@ -14,7 +14,7 @@ import (
 
 func main() {
 	client := explorer.NewClient(
-		explorer.WithAPIKey("YourApiKeyToken"),
+		explorer.WithAPIKey("Y3BFMKAY6K8CZGYC7Z7QSE2MBMSD7FIM5A"),
 		explorer.WithBaseURL(explorer.Ethereum),
 		// sub one to avoid hitting the limit
 		explorer.WithLimitTier(explorer.TierFree-1),
@@ -30,7 +30,7 @@ func main() {
 	var wg sync.WaitGroup
 	service := accounts.Service{Client: client}
 	// using the same client to call the same endpoint concurrently, testing the rate limit
-	for i := 0; i < 20; i++ {
+	for i := 0; i < 100; i++ {
 		wg.Add(1)
 		go func(idx int) {
 			defer wg.Done()
