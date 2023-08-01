@@ -4,23 +4,29 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io"
 	"net/http"
 	"net/url"
-	"time"
 
 	"github.com/xavierzho/explorer-api/utils"
-
-	"golang.org/x/time/rate"
 )
 
-// defaultClient default explorer client
-var defaultClient = &Client{
-	conn:    http.DefaultClient,
-	baseUrl: Ethereum.String(),
-	limiter: rate.NewLimiter(rate.Every(time.Second), 1),
+// DefaultClient default explorer client
+func DefaultClient() *Client {
+	return &Client{
+		conn: &http.Client{
+			Transport: NewRTLimiter(1, http.DefaultTransport, 3),
+		},
+		baseUrl: Ethereum.String(),
+	}
+}
+
+// ClientWithRTLimiter http.Client with rate limiter with request per second(rps) and retry times
+func ClientWithRTLimiter(rps, retry int) *http.Client {
+	return &http.Client{
+		Transport: NewRTLimiter(rps, http.DefaultTransport, retry),
+	}
 }
 
 // BeforeHook hook for calling before every request
@@ -34,59 +40,39 @@ type Client struct {
 	conn       *http.Client
 	APIKey     string
 	baseUrl    string
-	limiter    *rate.Limiter
 	BeforeHook BeforeHook
 	AfterHook  AfterHook
 }
 
-// ClientOption client option
-type ClientOption func(client *Client)
-
-// WithLimitTier is used to set the rate limit tier
-func WithLimitTier(limit Tier) ClientOption {
-	return func(client *Client) {
-		client.limiter = rate.NewLimiter(rate.Every(time.Second), int(limit))
-	}
-}
-
-// WithHTTPClient is used to set the http client
-func WithHTTPClient(conn *http.Client) ClientOption {
-	return func(client *Client) {
-		client.conn = conn
-	}
-}
-
-// WithTimeout is used to set the before hook
-func WithTimeout(timeout time.Duration) ClientOption {
-	return func(client *Client) {
-		client.conn.Timeout = timeout
-	}
-}
-
-// WithAPIKey is used to set the api APIKey
-func WithAPIKey(key string) ClientOption {
-	return func(client *Client) {
-		client.APIKey = key
-	}
-}
-
-// WithBaseURL is used to set the base url
-func WithBaseURL(url Network) ClientOption {
-	return func(client *Client) {
-		client.baseUrl = url.String()
-	}
-}
-
 // NewClient new explorer client
-func NewClient(opts ...ClientOption) *Client {
-	c := *defaultClient
-	for _, opt := range opts {
-		opt(&c)
-	}
-	if err := c.validate(); err != nil {
+//
+// if you want to disable rate limit, use http.DefaultClient instead for example:
+//
+//	NewClient("<you api key>", url, http.DefaultClient)
+//
+// if you want default rate limit, use nil instead for example:
+//
+//	NewClient("<you api key>", url, nil)
+//
+// also you can customize http.RoundTripper， refer RTLimiter:
+//
+//	rate limit is 1 request per second by default
+func NewClient(APIKey string, url Network, hc *http.Client) *Client {
+	c := DefaultClient()
+	if APIKey == "" {
+		fmt.Println("must provide APIKey")
 		return nil
 	}
-	return &c
+	c.APIKey = APIKey
+	if url == "" {
+		fmt.Println("must select url")
+		return nil
+	}
+	c.baseUrl = url.String()
+	if hc != nil {
+		c.conn = hc
+	}
+	return c
 }
 
 // Call http call
@@ -126,12 +112,13 @@ func (c *Client) call(ctx context.Context, module, action string, param utils.M,
 	if err != nil {
 		return err
 	}
+	// Deprecated: using http round tripper instead
 	// do request with rate limit
-	err = c.limiter.Wait(ctx)
-	if err != nil {
-		fmt.Println("rate limiter wait error:", err)
-		return err
-	}
+	//err = c.limiter.Wait(ctx)
+	//if err != nil {
+	//	fmt.Println("rate limiter wait error:", err)
+	//	return err
+	//}
 	resp, err := c.conn.Do(req)
 	if err != nil {
 		return err
@@ -175,18 +162,7 @@ func (c *Client) call(ctx context.Context, module, action string, param utils.M,
 	}
 	return nil
 }
-func (c *Client) validate() error {
-	if c.APIKey == "" {
-		return errors.New("api APIKey is required for Client")
-	}
-	if c.limiter == nil {
-		return errors.New("rate limiter is required for Client")
-	}
-	if c.limiter.Burst() < 1 {
-		return errors.New("burst rate limit is required for Client")
-	}
-	return nil
-}
+
 func (c *Client) buildURL(module, action string, param utils.M) (URL string) {
 	q := make(url.Values)
 	q.Add("module", module)

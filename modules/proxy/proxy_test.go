@@ -11,8 +11,8 @@ import (
 	"github.com/xavierzho/explorer-api/utils"
 )
 
-var client = explorer.NewClient(explorer.WithAPIKey("3T44IRF46WQUF4MQXIE2AYIFRSGCTNYAMS"),
-	explorer.WithLimitTier(4))
+var client = explorer.NewClient("YouApiKeyToken", explorer.Ethereum, nil)
+
 var s = &Service{
 	Client: client,
 }

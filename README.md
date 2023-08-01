@@ -4,7 +4,15 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/xavierzho/explorer-api)](https://goreportcard.com/report/github.com/xavierzho/explorer-api)
 ![License](https://img.shields.io/github/license/xavierzho/explorer-api.svg)
 
-Golang client for the Etherscan.io API(and its families like BscScan). with nearly full implementation(accounts, transactions, tokens, contracts, blocks, stats), full network support(Mainnet, Ropsten, Kovan, Rinkby, Goerli, Tobalaba), and depending on `go-ethereum/common`.
+Golang client for the Etherscan.io API(and its families like BscScan).
+
+# Features
+1. Full implementation of Etherscan API, such as (accounts, transactions, tokens, contracts, blocks, stats)
+2. network support (Mainnet, Ropsten, Kovan, Rinkby, Goerli, BNBChain, Poloygan, etc.)
+3. depending on `go-ethereum/common`, so you can use `common.Address` directly.
+4. support rate limit, you can set the rate limit by yourself.
+5. support hooks, you can add hooks to do something before or after the request.
+6. combining current limiters to support concurrency.
 
 
 # Usage
@@ -19,9 +27,11 @@ Create an API instance and off you go.
 package main
 
 import (
-	"github.com/xavierzho/explorer-api/modules/logs"
-	"net/http"
 	"context"
+	"fmt"
+
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/xavierzho/explorer-api/modules/logs"
 
 	"github.com/xavierzho/explorer-api"
 	"github.com/xavierzho/explorer-api/modules/accounts"
@@ -30,32 +40,27 @@ import (
 func main() {
 	// create a api client
 	client := explorer.NewClient(
-		// added your api key here
-		explorer.WithAPIKey("YourApiKeyToken"),
-		// using the different network
-		explorer.WithBaseURL(explorer.Ethereum),
-		// sub one to avoid hitting the limit
-		explorer.WithLimitTier(explorer.TierFree-1),
-		// custom http client
-		explorer.WithHTTPClient(http.DefaultClient),
-		// custom http request timeout
-		explorer.WithTimeout(0),
+		"<you api key here>",
+		explorer.Ethereum,
+		explorer.ClientWithRTLimiter(5, 3),
 	)
 	// (optional) add hooks. useful for logging, metrics, etc.
 	client.BeforeHook = func(ctx context.Context, url string) error {
 		// ...
 		return nil
 	}
-	client.AfterHook = func(ctx context.Context, url string, err error) {
+	client.AfterHook = func(ctx context.Context, body []byte) {
 		// ...
 	}
 	// arbitrary module dependency injection client
 	service := accounts.Service{Client: client}
-	
+
 	log := logs.Service{Client: client}
 	// and so on...
+	_ = log
 	// get account balance
-	balance, _ := service.EtherBalance("0xBE0eB53F46cd790Cd13851d5EFf43D12404d33E8")
+	balance, _ := service.EtherBalance(common.HexToAddress("0xBE0eB53F46cd790Cd13851d5EFf43D12404d33E8"))
+	fmt.Println(balance)
 
 }
 

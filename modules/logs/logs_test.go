@@ -7,8 +7,8 @@ import (
 	"testing"
 )
 
-var client = explorer.NewClient(explorer.WithAPIKey("YourApiKeyToken"),
-	explorer.WithLimitTier(4))
+var client = explorer.NewClient("YouApiKeyToken", explorer.Ethereum, nil)
+
 var s = &Service{
 	Client: client,
 }
