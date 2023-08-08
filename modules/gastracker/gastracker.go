@@ -54,7 +54,7 @@ func (s *Service) DailyAverageGasLimit(start, end utils.Time, isDesc bool) (gasL
 //
 // description:https://docs.etherscan.io/api-endpoints/gas-tracker#get-ethereum-daily-total-gas-used
 //
-// Returns the total amount of gas used daily for transctions on the Ethereum network.
+// Returns the total amount of gas used daily for transactions on the Ethereum network.
 func (s *Service) DailyGasUsed(start, end utils.Time, isDesc bool) (gasUsed []DailyGasUsed, err error) {
 	sortStr := "asc"
 	if isDesc {
