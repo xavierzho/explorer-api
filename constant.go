@@ -19,14 +19,14 @@ const (
 type Network string
 
 const (
-	Ethereum          Network = "api.etherscan.io"
-	GoerliTestnet     Network = "api-goerli.etherscan.io"
-	SepoliaTestnet    Network = "api-sepolia.etherscan.io"
-	BinanceSmartChain Network = "api.bscscan.com"
-	BinanceTestnet    Network = "api-testnet.bscscan.com"
-	Polygon           Network = "api.polygonscan.com"
-	Fantom            Network = "api.ftmscan.com"
-	Arbitrum          Network = "api.arbiscan.io"
+	Ethereum          Network = "https://api.etherscan.io/api"
+	GoerliTestnet     Network = "https://api-goerli.etherscan.io/api"
+	SepoliaTestnet    Network = "https://api-sepolia.etherscan.io/api"
+	BinanceSmartChain Network = "https://api.bscscan.com/api"
+	BinanceTestnet    Network = "https://api-testnet.bscscan.com/api"
+	Polygon           Network = "https://api.polygonscan.com/api"
+	Fantom            Network = "https://api.ftmscan.com/api"
+	Arbitrum          Network = "https://api.arbiscan.io/api"
 )
 
 var (

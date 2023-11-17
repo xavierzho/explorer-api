@@ -104,7 +104,7 @@ func (c *Client) call(ctx context.Context, module, action string, param utils.M,
 	// recover if there shall be a panic
 	defer func() {
 		if r := recover(); r != nil {
-			fmt.Printf("[ouch! panic recovered] please report this with what you did and what you expected, panic detail: %v\n", r)
+			fmt.Printf("[oh! panic recovered] please report this with what you did and what you expected, panic detail: %v\n", r)
 		}
 	}()
 	// build request with context
@@ -139,8 +139,19 @@ func (c *Client) call(ctx context.Context, module, action string, param utils.M,
 		return err
 	}
 	// unmarshal response body
+	err = c.unmarshalBody(content.Bytes(), outcome)
+	if err != nil {
+		return err
+	}
+	if c.AfterHook != nil {
+		c.AfterHook(ctx, content.Bytes())
+	}
+	return nil
+}
+
+func (c *Client) unmarshalBody(body []byte, outcome any) error {
 	var envelope Envelope
-	err = json.Unmarshal(content.Bytes(), &envelope)
+	err := json.Unmarshal(body, &envelope)
 	if err != nil {
 		return err
 	}
@@ -151,14 +162,10 @@ func (c *Client) call(ctx context.Context, module, action string, param utils.M,
 	if envelope.Result == nil {
 		return fmt.Errorf("rpc error, %s", envelope.Error.Message)
 	}
-
 	// unmarshal result
 	err = json.Unmarshal(envelope.Result, outcome)
 	if err != nil {
 		return err
-	}
-	if c.AfterHook != nil {
-		c.AfterHook(ctx, content.Bytes())
 	}
 	return nil
 }
@@ -171,7 +178,7 @@ func (c *Client) buildURL(module, action string, param utils.M) (URL string) {
 	for k, v := range param {
 		q.Add(k, v)
 	}
-	return fmt.Sprintf("https://%s/api?%s", c.baseUrl, q.Encode())
+	return fmt.Sprintf("%s?%s", c.baseUrl, q.Encode())
 }
 
 // Post method post for client
