@@ -8,6 +8,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"strings"
 
 	"github.com/xavierzho/explorer-api/utils"
 )
@@ -121,7 +122,7 @@ func (c *Client) call(ctx context.Context, module, action string, param utils.M,
 	//}
 	resp, err := c.conn.Do(req)
 	if err != nil {
-		return err
+		return fmt.Errorf("%s: error(%+v)\n", strings.Split(link, "?")[1], err)
 	}
 	// safety close response body
 	defer func(Body io.ReadCloser) {
