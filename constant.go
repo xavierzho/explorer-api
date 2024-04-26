@@ -1,5 +1,7 @@
 package explorer
 
+import "net/url"
+
 // Tier is the tier of the API APIKey.
 //
 // If using custom tier usage: Tier(custom limit).
@@ -28,6 +30,11 @@ const (
 	Fantom            Network = "https://api.ftmscan.com/api"
 	Arbitrum          Network = "https://api.arbiscan.io/api"
 )
+
+func (n Network) URL() *url.URL {
+	u, _ := url.Parse(string(n))
+	return u
+}
 
 var (
 	// ignore unused network error
