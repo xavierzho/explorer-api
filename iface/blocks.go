@@ -1,17 +1,11 @@
-package blocks
+package iface
 
 import (
-	"github.com/xavierzho/explorer-api"
 	"github.com/xavierzho/explorer-api/utils"
 )
 
-type ProAction interface {
-	GetDailyAvgBlockSize(start, end utils.Time, isDesc bool) (size []Size, err error)
-	GetDailyBlockRewards(start, end utils.Time, isDesc bool) (counter []DailyBlockReward, err error)
-	GetAvgMinedSecond(start, end utils.Time, isDesc bool) (counter []AverageMinedTime, err error)
-}
-type Action interface {
-	explorer.Module
+type Blocks interface {
+	Module
 	// BlockReward Get Block And Uncle Rewards by BlockNo
 	BlockReward(blockNo int) (Reward, error)
 	// BlockCountDown Get Estimated Block Countdown Time by BlockNo
@@ -19,7 +13,12 @@ type Action interface {
 	// BlockNoByTimestamp Get Block Number by Timestamp
 	BlockNoByTimestamp(ts int, closest string) (blockNo string, err error)
 
-	ProAction
+	// GetDailyAvgBlockSize [Pro]
+	GetDailyAvgBlockSize(start, end utils.Time, isDesc bool) (size []Size, err error)
+	// GetDailyBlockRewards [Pro]
+	GetDailyBlockRewards(start, end utils.Time, isDesc bool) (counter []DailyBlockReward, err error)
+	// GetAvgMinedSecond [Pro]
+	GetAvgMinedSecond(start, end utils.Time, isDesc bool) (counter []AverageMinedTime, err error)
 }
 
 type Reward struct {

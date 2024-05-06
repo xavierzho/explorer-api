@@ -2,12 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/xavierzho/explorer-api"
 	"sync"
 
 	"github.com/ethereum/go-ethereum/common"
-
-	"github.com/xavierzho/explorer-api/modules/accounts"
+	"github.com/xavierzho/explorer-api"
 )
 
 func main() {
@@ -23,7 +21,7 @@ func main() {
 	//	fmt.Println("body", string(body))
 	//}
 	var wg sync.WaitGroup
-	service := accounts.Service{Client: client}
+	service := client.Accounts()
 	success := 0
 	mux := sync.Mutex{}
 	// using the same client to call the same endpoint concurrently, testing the rate limit

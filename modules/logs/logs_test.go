@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/xavierzho/explorer-api"
+	"github.com/xavierzho/explorer-api/iface"
 	"testing"
 )
 
@@ -14,18 +15,18 @@ var s = &Service{
 }
 
 func TestMarshalIntoMap(t *testing.T) {
-	var param = Params{
+	var param = iface.Params{
 		FromBlock:       "0x1",
 		Topic0:          "0x2",
 		Topic1:          "0x3",
-		Topic01Operator: OperatorOr,
-		Topic12Operator: OperatorAnd,
+		Topic01Operator: iface.OperatorOr,
+		Topic12Operator: iface.OperatorAnd,
 	}
 	fmt.Println(param.MarshalIntoMap())
 }
 
 func TestGetLogs(t *testing.T) {
-	res, err := s.GetLogs(Params{
+	res, err := s.GetLogs(iface.Params{
 		Address:         "0x59728544b08ab483533076417fbbb2fd0b17ce3a",
 		FromBlock:       "15073139",
 		ToBlock:         "15074139",

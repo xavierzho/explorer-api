@@ -1,9 +1,7 @@
-package contracts
+package iface
 
-import "github.com/xavierzho/explorer-api"
-
-type Action interface {
-	explorer.Module
+type Contracts interface {
+	Module
 	GetABI(address string) (abi string, err error)
 	GetSourceCode(address string) (sourceCodes []SourceCode, err error)
 	GetContractCreation(address []string) (contractCreations []Creation, err error)

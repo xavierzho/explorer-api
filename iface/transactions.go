@@ -1,9 +1,7 @@
-package transactions
+package iface
 
-import "github.com/xavierzho/explorer-api"
-
-type Action interface {
-	explorer.Module
+type Transactions interface {
+	Module
 	GetExecutionStatus(txhash string) (status ExecStatus, err error)
 	GetReceiptStatus(txhash string) (status ReceiptStatus, err error)
 }

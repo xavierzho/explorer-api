@@ -1,9 +1,7 @@
-package tokens
+package iface
 
-import "github.com/xavierzho/explorer-api"
-
-type Action interface {
-	explorer.Module
+type Tokens interface {
+	Module
 	ERC20Holders(address string, page, offset *int) ([]Holder, error)
 	TokenInfo(address string) ([]SocialInfo, error)
 }

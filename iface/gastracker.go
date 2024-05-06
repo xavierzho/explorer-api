@@ -1,20 +1,14 @@
-package gastracker
+package iface
 
-import (
-	"github.com/xavierzho/explorer-api"
-	"github.com/xavierzho/explorer-api/utils"
-)
+import "github.com/xavierzho/explorer-api/utils"
 
-type ProAction interface {
+type GasTracker interface {
+	Module
+	GasEstimate(gasprice string) (gas string, err error)
+	GasOracle() (gasOracle GasOracle, err error)
 	DailyAverageGasLimit(start, end utils.Time, isDesc bool) (gasLimit []DailyAverageGasLimit, err error)
 	DailyGasUsed(start, end utils.Time, isDesc bool) (gasUsed []DailyGasUsed, err error)
 	DailyGasPrice(start, end utils.Time, isDesc bool) (gasPrice []DailyGasPrice, err error)
-}
-type Action interface {
-	explorer.Module
-	GasEstimate(gasprice string) (gas string, err error)
-	GasOracle() (gasOracle GasOracle, err error)
-	ProAction
 }
 
 type GasOracle struct {

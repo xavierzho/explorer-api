@@ -1,11 +1,11 @@
 package gastracker
 
 import (
-	"github.com/xavierzho/explorer-api/modules"
+	"github.com/xavierzho/explorer-api/iface"
 	"github.com/xavierzho/explorer-api/utils"
 )
 
-type Service modules.Service
+type Service iface.Service
 
 // Name returns the name of this service.
 func (s *Service) Name() string { return "gastracker" }
@@ -27,7 +27,7 @@ func (s *Service) GasEstimate(gasprice string) (gas string, err error) {
 // description: https://docs.etherscan.io/api-endpoints/gas-tracker#get-gas-oracle
 //
 // Returns the current Safe, Proposed and Fast gas prices.
-func (s *Service) GasOracle() (gasOracle GasOracle, err error) {
+func (s *Service) GasOracle() (gasOracle iface.GasOracle, err error) {
 	err = s.Client.Call(s, "gasoracle", nil, &gasOracle)
 	return
 }
@@ -37,7 +37,7 @@ func (s *Service) GasOracle() (gasOracle GasOracle, err error) {
 // description:
 //
 // Returns the historical daily average gas limit of the Ethereum network.
-func (s *Service) DailyAverageGasLimit(start, end utils.Time, isDesc bool) (gasLimit []DailyAverageGasLimit, err error) {
+func (s *Service) DailyAverageGasLimit(start, end utils.Time, isDesc bool) (gasLimit []iface.DailyAverageGasLimit, err error) {
 	sortStr := "asc"
 	if isDesc {
 		sortStr = "desc"
@@ -55,7 +55,7 @@ func (s *Service) DailyAverageGasLimit(start, end utils.Time, isDesc bool) (gasL
 // description:https://docs.etherscan.io/api-endpoints/gas-tracker#get-ethereum-daily-total-gas-used
 //
 // Returns the total amount of gas used daily for transactions on the Ethereum network.
-func (s *Service) DailyGasUsed(start, end utils.Time, isDesc bool) (gasUsed []DailyGasUsed, err error) {
+func (s *Service) DailyGasUsed(start, end utils.Time, isDesc bool) (gasUsed []iface.DailyGasUsed, err error) {
 	sortStr := "asc"
 	if isDesc {
 		sortStr = "desc"
@@ -73,7 +73,7 @@ func (s *Service) DailyGasUsed(start, end utils.Time, isDesc bool) (gasUsed []Da
 // description:https://docs.etherscan.io/api-endpoints/gas-tracker#get-ethereum-daily-gas-price
 //
 // Returns the daily gas price of the Ethereum network.
-func (s *Service) DailyGasPrice(start, end utils.Time, isDesc bool) (gasPrice []DailyGasPrice, err error) {
+func (s *Service) DailyGasPrice(start, end utils.Time, isDesc bool) (gasPrice []iface.DailyGasPrice, err error) {
 	sortStr := "asc"
 	if isDesc {
 		sortStr = "desc"

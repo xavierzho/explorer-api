@@ -1,11 +1,18 @@
-package stats
+package iface
 
 import (
-	"github.com/xavierzho/explorer-api"
 	"github.com/xavierzho/explorer-api/utils"
 )
 
-type ProAction interface {
+type Stats interface {
+	Module
+	EthSupply() (*utils.BN, error)
+	Eth2Supply() (Supply, error)
+	EthLastPrice() (Prices, error)
+	GetNodeSize(startDate, endDate string, isAsc bool) (sizes []NodeSize, err error)
+	NodeCount() (nodeCount NodeCount, err error)
+	GetERC20Supply(contractAddress string) (supply *utils.BN, err error)
+
 	GetDailyTxFee(start, end utils.Time, isDesc bool) (fees []DailyTxFee, err error)
 	GetDailyNewAddress(start, end utils.Time, isDesc bool) (addresses []DailyNewAddress, err error)
 	GetDailyNetworkUtilization(start, end utils.Time, isDesc bool) (utilizations []DailyNetworkUtilization, err error)
@@ -15,15 +22,6 @@ type ProAction interface {
 	GetEtherHistoricalDailyMarketCap(start, end utils.Time, isDesc bool) (marketCaps []EtherHistoricalDailyMarketCap, err error)
 	GetEtherHistoricalPrice(start, end utils.Time, isDesc bool) (prices []EtherHistoricalPrice, err error)
 	GetHistoricalERC20Supply(contractAddress string, blockNo uint64) (supply *utils.BN, err error)
-}
-type Action interface {
-	explorer.Module
-	EthSupply() (*utils.BN, error)
-	Eth2Supply() (Supply, error)
-	EthLastPrice() (Prices, error)
-	GetNodeSize(startDate, endDate string, isAsc bool) (sizes []NodeSize, err error)
-	NodeCount() (nodeCount NodeCount, err error)
-	GetERC20Supply(contractAddress string) (supply *utils.BN, err error)
 }
 
 type Supply struct {

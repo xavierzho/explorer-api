@@ -10,6 +10,17 @@ import (
 	"net/url"
 	"strings"
 
+	"github.com/xavierzho/explorer-api/iface"
+	"github.com/xavierzho/explorer-api/modules/accounts"
+	"github.com/xavierzho/explorer-api/modules/blocks"
+	"github.com/xavierzho/explorer-api/modules/contracts"
+	"github.com/xavierzho/explorer-api/modules/gastracker"
+	"github.com/xavierzho/explorer-api/modules/logs"
+	"github.com/xavierzho/explorer-api/modules/proxy"
+	"github.com/xavierzho/explorer-api/modules/stats"
+	"github.com/xavierzho/explorer-api/modules/tokens"
+	"github.com/xavierzho/explorer-api/modules/transactions"
+
 	"github.com/xavierzho/explorer-api/utils"
 )
 
@@ -77,7 +88,7 @@ func NewClient(APIKey string, url Network, hc *http.Client) *Client {
 }
 
 // Call http call
-func (c *Client) Call(module Module, action string, param utils.M, outcome any) error {
+func (c *Client) Call(module iface.Module, action string, param utils.M, outcome any) error {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 	return c.call(ctx, module.Name(), action, param, outcome)
@@ -185,4 +196,37 @@ func (c *Client) buildURL(module, action string, param utils.M) (URL string) {
 // Post method post for client
 func (c *Client) Post(url string, body io.Reader) (resp *http.Response, err error) {
 	return c.conn.Post(url, "application/json", body)
+}
+func (c *Client) serv() *iface.Service {
+	return &iface.Service{Client: c}
+}
+func (c *Client) Accounts() iface.Accounts {
+	return (*accounts.Service)(c.serv())
+}
+func (c *Client) Blocks() iface.Blocks {
+	return (*blocks.Service)(c.serv())
+}
+
+func (c *Client) Contracts() iface.Contracts {
+	return (*contracts.Service)(c.serv())
+}
+
+func (c *Client) GasTracker() iface.GasTracker {
+	return (*gastracker.Service)(c.serv())
+}
+
+func (c *Client) Logs() iface.Logs {
+	return (*logs.Service)(c.serv())
+}
+func (c *Client) Proxy() iface.Proxy {
+	return (*proxy.Service)(c.serv())
+}
+func (c *Client) Stats() iface.Stats {
+	return (*stats.Service)(c.serv())
+}
+func (c *Client) Tokens() iface.Tokens {
+	return (*tokens.Service)(c.serv())
+}
+func (c *Client) Transactions() iface.Transactions {
+	return (*transactions.Service)(c.serv())
 }

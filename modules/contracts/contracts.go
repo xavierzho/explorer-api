@@ -1,11 +1,11 @@
 package contracts
 
 import (
-	"github.com/xavierzho/explorer-api/modules"
+	"github.com/xavierzho/explorer-api/iface"
 	"strings"
 )
 
-type Service modules.Service
+type Service iface.Service
 
 func (s *Service) Name() string { return "contract" }
 
@@ -26,7 +26,7 @@ func (s *Service) GetABI(address string) (abi string, err error) {
 // description: https://docs.etherscan.io/api-endpoints/contracts#get-contract-source-code-for-verified-contract-source-codes
 //
 // Returns the Solidity source code of a verified smart contract.
-func (s *Service) GetSourceCode(address string) (sourceCodes []SourceCode, err error) {
+func (s *Service) GetSourceCode(address string) (sourceCodes []iface.SourceCode, err error) {
 	err = s.Client.Call(s, "getsourcecode", map[string]string{
 		"address": address,
 	}, &sourceCodes)
@@ -38,7 +38,7 @@ func (s *Service) GetSourceCode(address string) (sourceCodes []SourceCode, err e
 // description:https://docs.etherscan.io/api-endpoints/contracts#get-contract-creator-and-creation-tx-hash
 //
 // Returns a contract's deployer address and transaction hash it was created, up to 5 at a time.
-func (s *Service) GetContractCreation(address []string) (contractCreations []Creation, err error) {
+func (s *Service) GetContractCreation(address []string) (contractCreations []iface.Creation, err error) {
 
 	err = s.Client.Call(s, "getcontractcreation", map[string]string{
 		"contractaddresses": strings.Join(address, ","),

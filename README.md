@@ -31,10 +31,10 @@ import (
 	"fmt"
 
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/xavierzho/explorer-api/modules/logs"
+	//"github.com/xavierzho/explorer-api/modules/logs"
 
 	"github.com/xavierzho/explorer-api"
-	"github.com/xavierzho/explorer-api/modules/accounts"
+	//"github.com/xavierzho/explorer-api/modules/accounts"
 )
 
 func main() {
@@ -53,11 +53,15 @@ func main() {
 		// ...
 	}
 	// arbitrary module dependency injection client
-	service := accounts.Service{Client: client}
 
-	log := logs.Service{Client: client}
+	// after v1.3
+	service := client.Accounts()
+	// compatible old version
+	//service := accounts.Service{Client: client}
+
+	//log := logs.Service{Client: client}
 	// and so on...
-	_ = log
+	//_ = log
 	// get account balance
 	balance, _ := service.EtherBalance(common.HexToAddress("0xBE0eB53F46cd790Cd13851d5EFf43D12404d33E8"))
 	fmt.Println(balance)

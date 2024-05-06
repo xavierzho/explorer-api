@@ -1,10 +1,8 @@
 package transactions
 
-import (
-	"github.com/xavierzho/explorer-api/modules"
-)
+import "github.com/xavierzho/explorer-api/iface"
 
-type Service modules.Service
+type Service iface.Service
 
 func (*Service) Name() string { return "transaction" }
 
@@ -13,7 +11,7 @@ func (*Service) Name() string { return "transaction" }
 // description: https://docs.etherscan.io/api-endpoints/stats#check-contract-execution-status
 //
 // Returns the status code of a contract execution.
-func (s *Service) GetExecutionStatus(txhash string) (status ExecStatus, err error) {
+func (s *Service) GetExecutionStatus(txhash string) (status iface.ExecStatus, err error) {
 	err = s.Client.Call(s, "getstatus", map[string]string{"txhash": txhash}, &status)
 	return
 }
@@ -23,7 +21,7 @@ func (s *Service) GetExecutionStatus(txhash string) (status ExecStatus, err erro
 // description: https://docs.etherscan.io/api-endpoints/stats#check-transaction-receipt-status
 //
 // Returns the status code of a transaction execution.
-func (s *Service) GetReceiptStatus(txhash string) (status ReceiptStatus, err error) {
+func (s *Service) GetReceiptStatus(txhash string) (status iface.ReceiptStatus, err error) {
 	err = s.Client.Call(s, "gettxreceiptstatus", map[string]string{"txhash": txhash}, &status)
 	return
 }

@@ -1,12 +1,12 @@
 package blocks
 
 import (
-	"github.com/xavierzho/explorer-api/modules"
+	"github.com/xavierzho/explorer-api/iface"
 	"github.com/xavierzho/explorer-api/utils"
 	"strconv"
 )
 
-type Service modules.Service
+type Service iface.Service
 
 func (*Service) Name() string { return "block" }
 
@@ -15,7 +15,7 @@ func (*Service) Name() string { return "block" }
 // description: https://docs.etherscan.io/api-endpoints/blocks#get-block-and-uncle-rewards-by-blockno
 //
 // Returns the block reward and 'Uncle' block rewards.
-func (s *Service) BlockReward(blockNo int) (reward Reward, err error) {
+func (s *Service) BlockReward(blockNo int) (reward iface.Reward, err error) {
 	err = s.Client.Call(s, "getblockreward", map[string]string{
 		"blockno": strconv.Itoa(blockNo),
 	}, &reward)
@@ -28,7 +28,7 @@ func (s *Service) BlockReward(blockNo int) (reward Reward, err error) {
 // description: https://docs.etherscan.io/api-endpoints/blocks#get-estimated-block-countdown-time-by-blockno
 //
 // Returns the estimated time remaining, in seconds, until a certain block is mined.
-func (s *Service) BlockCountDown(blockNo int) (countdown CountDown, err error) {
+func (s *Service) BlockCountDown(blockNo int) (countdown iface.CountDown, err error) {
 
 	err = s.Client.Call(s, "getblockcountdown", map[string]string{
 		"blockno": strconv.Itoa(blockNo),
@@ -55,7 +55,7 @@ func (s *Service) BlockNoByTimestamp(ts int, closest string) (blockNo string, er
 // description: https://docs.etherscan.io/api-endpoints/blocks#get-daily-average-block-size
 //
 // Returns the average block size for a given timestamp.
-func (s *Service) GetDailyAvgBlockSize(start, end utils.Time, isDesc bool) (size []Size, err error) {
+func (s *Service) GetDailyAvgBlockSize(start, end utils.Time, isDesc bool) (size []iface.Size, err error) {
 	sort := "asc"
 	if isDesc {
 		sort = "desc"
@@ -74,7 +74,7 @@ func (s *Service) GetDailyAvgBlockSize(start, end utils.Time, isDesc bool) (size
 // description: https://docs.etherscan.io/api-endpoints/blocks#get-daily-block-count-and-rewards
 //
 // Returns the number of blocks mined daily and the amount of block rewards.
-func (s *Service) GetDailyBlockCountRewards(start, end utils.Time, isDesc bool) (counter []DailyBlockCounter, err error) {
+func (s *Service) GetDailyBlockCountRewards(start, end utils.Time, isDesc bool) (counter []iface.DailyBlockCounter, err error) {
 	sort := "asc"
 	if isDesc {
 		sort = "desc"
@@ -93,7 +93,7 @@ func (s *Service) GetDailyBlockCountRewards(start, end utils.Time, isDesc bool) 
 // description: https://docs.etherscan.io/api-endpoints/blocks#get-daily-block-rewards
 //
 // Returns the amount of block rewards distributed to miners daily.
-func (s *Service) GetDailyBlockRewards(start, end utils.Time, isDesc bool) (counter []DailyBlockReward, err error) {
+func (s *Service) GetDailyBlockRewards(start, end utils.Time, isDesc bool) (counter []iface.DailyBlockReward, err error) {
 	sort := "asc"
 	if isDesc {
 		sort = "desc"
@@ -112,7 +112,7 @@ func (s *Service) GetDailyBlockRewards(start, end utils.Time, isDesc bool) (coun
 // description:https://docs.etherscan.io/api-endpoints/blocks#get-daily-average-time-for-a-block-to-be-included-in-the-ethereum-blockchain
 //
 // Returns the daily average of time needed for a block to be successfully mined.
-func (s *Service) GetAvgMinedSecond(start, end utils.Time, isDesc bool) (counter []AverageMinedTime, err error) {
+func (s *Service) GetAvgMinedSecond(start, end utils.Time, isDesc bool) (counter []iface.AverageMinedTime, err error) {
 	sort := "asc"
 	if isDesc {
 		sort = "desc"

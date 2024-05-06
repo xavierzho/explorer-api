@@ -3,11 +3,11 @@ package proxy
 import (
 	"fmt"
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/xavierzho/explorer-api/modules"
+	"github.com/xavierzho/explorer-api/iface"
 	"github.com/xavierzho/explorer-api/utils"
 )
 
-type Service modules.Service
+type Service iface.Service
 
 func (*Service) Name() string { return "proxy" }
 
@@ -16,12 +16,12 @@ func (s *Service) GetBlockNumber() (blockNumber utils.BN, err error) {
 	return
 }
 
-func (s *Service) GetBlockByNumber(blockNumber *utils.BN) (block Block, err error) {
+func (s *Service) GetBlockByNumber(blockNumber *utils.BN) (block iface.Block, err error) {
 	err = s.Client.Call(s, "eth_getBlockByNumber", utils.M{"tag": blockNumber.Hex(), "boolean": "true"}, &block)
 	return
 }
 
-func (s *Service) GetUncleByBlockNumberAndIndex(tag, index *utils.BN) (uncle Uncle, err error) {
+func (s *Service) GetUncleByBlockNumberAndIndex(tag, index *utils.BN) (uncle iface.Uncle, err error) {
 	err = s.Client.Call(s, "eth_getUncleByBlockNumberAndIndex", utils.M{"tag": tag.Hex(), "index": index.Hex()}, &uncle)
 	return
 }
@@ -35,12 +35,12 @@ func (s *Service) GetTxCountByBlockNumber(tag *utils.BN) (txCount utils.BN, err 
 	return
 }
 
-func (s *Service) GetTxByHash(hash common.Hash) (tx Tx, err error) {
+func (s *Service) GetTxByHash(hash common.Hash) (tx iface.Tx, err error) {
 	err = s.Client.Call(s, "eth_getTransactionByHash", utils.M{"txhash": hash.Hex()}, &tx)
 	return
 }
 
-func (s *Service) GetTxByBlockNumberAndIndex(tag, index *utils.BN) (tx Tx, err error) {
+func (s *Service) GetTxByBlockNumberAndIndex(tag, index *utils.BN) (tx iface.Tx, err error) {
 	err = s.Client.Call(s, "eth_getTransactionByBlockNumberAndIndex", utils.M{"tag": tag.Hex(), "index": index.Hex()}, &tx)
 	return
 }
@@ -50,7 +50,7 @@ func (s *Service) GetTxCountByAddress(address common.Address) (txCount utils.BN,
 	return
 }
 
-func (s *Service) GetTxReceiptByHash(hash common.Hash) (txReceipt TxReceipt, err error) {
+func (s *Service) GetTxReceiptByHash(hash common.Hash) (txReceipt iface.TxReceipt, err error) {
 	err = s.Client.Call(s, "eth_getTransactionReceipt", utils.M{"txhash": hash.Hex()}, &txReceipt)
 	return
 }

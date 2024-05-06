@@ -1,15 +1,14 @@
-package logs
+package iface
 
 import (
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/xavierzho/explorer-api"
 	"github.com/xavierzho/explorer-api/utils"
 	"reflect"
 	"strings"
 )
 
-type Action interface {
-	explorer.Module
+type Logs interface {
+	Module
 	GetLogs(params Params) ([]Log, error)
 }
 type Operator string

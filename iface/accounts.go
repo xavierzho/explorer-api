@@ -1,22 +1,12 @@
-package accounts
+package iface
 
 import (
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/xavierzho/explorer-api"
 	"github.com/xavierzho/explorer-api/utils"
 )
 
-type ProAction interface {
-	// HistoricalByBlockNo gets historical block information by block number
-	HistoricalByBlockNo(address common.Address, blockNo int) (balance HistoricalBalance, err error)
-	HistoricalERC20Balance(address, contractAddress common.Address, blockNo int) (balance HistoricalBalance, err error)
-	GetHoldingERC20Tokens(address common.Address, page, offset *int) (tokens []HoldingERC20, err error)
-	GetHoldingERC721Tokens(address common.Address, page, offset *int) (tokens []HoldingERC721, err error)
-	GetERC721Inventory(wallet, contract common.Address, page, offset *int) (tokens []ERC721Inventory, err error)
-}
-
-type Action interface {
-	explorer.Module
+type Accounts interface {
+	Module
 	// EtherBalance gets ether balance for a single address
 	EtherBalance(address common.Address) (balance *utils.BN, err error)
 	// MultiAccountBalance gets ether balance for multiple addresses in a single call
@@ -39,7 +29,13 @@ type Action interface {
 	MinedBlocksByAddress(address common.Address, page int, offset int) (blocks []MinedBlock, err error)
 
 	ERC20Balance(address common.Address, contractAddress string) (balance *utils.BN, err error)
-	ProAction
+
+	// HistoricalByBlockNo gets historical block information by block number
+	HistoricalByBlockNo(address common.Address, blockNo int) (balance HistoricalBalance, err error)
+	HistoricalERC20Balance(address, contractAddress common.Address, blockNo int) (balance HistoricalBalance, err error)
+	GetHoldingERC20Tokens(address common.Address, page, offset *int) (tokens []HoldingERC20, err error)
+	GetHoldingERC721Tokens(address common.Address, page, offset *int) (tokens []HoldingERC721, err error)
+	GetERC721Inventory(wallet, contract common.Address, page, offset *int) (tokens []ERC721Inventory, err error)
 }
 
 // Balance account and its balance in pair

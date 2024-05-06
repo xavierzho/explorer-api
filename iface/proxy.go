@@ -1,13 +1,12 @@
-package proxy
+package iface
 
 import (
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/xavierzho/explorer-api"
 	"github.com/xavierzho/explorer-api/utils"
 )
 
-type Action interface {
-	explorer.Module
+type Proxy interface {
+	Module
 	GetBlockNumber() (blockNumber utils.BN, err error)
 	GetBlockByNumber(blockNumber *utils.BN) (block Block, err error)
 	GetUncleByBlockNumberAndIndex(tag, index *utils.BN) (uncle Uncle, err error)

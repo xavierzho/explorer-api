@@ -1,15 +1,13 @@
 package logs
 
-import (
-	"github.com/xavierzho/explorer-api/modules"
-)
+import "github.com/xavierzho/explorer-api/iface"
 
-type Service modules.Service
+type Service iface.Service
 
 // Name returns the name of the service.
 func (*Service) Name() string { return "logs" }
 
-func (s *Service) GetLogs(params Params) (logs []Log, err error) {
+func (s *Service) GetLogs(params iface.Params) (logs []iface.Log, err error) {
 	err = s.Client.Call(s, "getLogs", params.MarshalIntoMap(), &logs)
 	return
 }

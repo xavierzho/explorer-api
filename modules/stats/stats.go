@@ -1,13 +1,14 @@
 package stats
 
 import (
-	"github.com/xavierzho/explorer-api/modules"
 	"strconv"
+
+	"github.com/xavierzho/explorer-api/iface"
 
 	"github.com/xavierzho/explorer-api/utils"
 )
 
-type Service modules.Service
+type Service iface.Service
 
 func (*Service) Name() string { return "stats" }
 
@@ -26,7 +27,7 @@ func (s *Service) EthSupply() (supply *utils.BN, err error) {
 // description: https://docs.etherscan.io/api-endpoints/stats-1#get-total-supply-of-ether-2
 //
 // Returns the current amount of Ether in circulation, ETH2 Staking rewards, EIP1559 burnt fees, and total withdrawn ETH from the beacon chain.
-func (s *Service) Eth2Supply() (supply Supply, err error) {
+func (s *Service) Eth2Supply() (supply iface.Supply, err error) {
 	err = s.Client.Call(s, "ethsupply2", nil, &supply)
 	return
 }
@@ -36,7 +37,7 @@ func (s *Service) Eth2Supply() (supply Supply, err error) {
 // description: https://docs.etherscan.io/api-endpoints/stats-1#get-ether-last-price
 //
 // Returns the latest price of 1 ETH.
-func (s *Service) EthLastPrice() (prices Prices, err error) {
+func (s *Service) EthLastPrice() (prices iface.Prices, err error) {
 	err = s.Client.Call(s, "ethprice", nil, &prices)
 	return
 }
@@ -46,7 +47,7 @@ func (s *Service) EthLastPrice() (prices Prices, err error) {
 // description: https://docs.etherscan.io/api-endpoints/stats-1#get-ethereum-nodes-size
 //
 // Returns the size of the Ethereum blockchain, in bytes, over a date range.
-func (s *Service) GetNodeSize(startDate, endDate string, isAsc bool) (sizes []NodeSize, err error) {
+func (s *Service) GetNodeSize(startDate, endDate string, isAsc bool) (sizes []iface.NodeSize, err error) {
 	sort := "asc"
 	if !isAsc {
 		sort = "desc"
@@ -66,7 +67,7 @@ func (s *Service) GetNodeSize(startDate, endDate string, isAsc bool) (sizes []No
 // description: https://docs.etherscan.io/api-endpoints/stats-1#get-total-nodes-count
 //
 // Returns the total number of discoverable Ethereum nodes.
-func (s *Service) NodeCount() (nodeCount NodeCount, err error) {
+func (s *Service) NodeCount() (nodeCount iface.NodeCount, err error) {
 	err = s.Client.Call(s, "nodecount", nil, &nodeCount)
 	return
 }
@@ -76,7 +77,7 @@ func (s *Service) NodeCount() (nodeCount NodeCount, err error) {
 // description: https://docs.etherscan.io/api-endpoints/stats-1#get-daily-network-transaction-fee
 //
 // Returns the amount of transaction fees paid to miners per day.
-func (s *Service) GetDailyTxFee(start, end utils.Time, isDesc bool) (fees []DailyTxFee, err error) {
+func (s *Service) GetDailyTxFee(start, end utils.Time, isDesc bool) (fees []iface.DailyTxFee, err error) {
 	sort := "asc"
 	if isDesc {
 		sort = "desc"
@@ -95,7 +96,7 @@ func (s *Service) GetDailyTxFee(start, end utils.Time, isDesc bool) (fees []Dail
 // description: https://docs.etherscan.io/api-endpoints/stats-1#get-daily-new-address-count
 //
 // Returns the number of new addresses created per day.
-func (s *Service) GetDailyNewAddress(start, end utils.Time, isDesc bool) (addresses []DailyNewAddress, err error) {
+func (s *Service) GetDailyNewAddress(start, end utils.Time, isDesc bool) (addresses []iface.DailyNewAddress, err error) {
 	sort := "asc"
 	if isDesc {
 		sort = "desc"
@@ -113,7 +114,7 @@ func (s *Service) GetDailyNewAddress(start, end utils.Time, isDesc bool) (addres
 // description: https://docs.etherscan.io/api-endpoints/stats-1#get-daily-network-utilization
 //
 // Returns the daily average gas used over gas limit, in percentage.
-func (s *Service) GetDailyNetworkUtilization(start, end utils.Time, isDesc bool) (utilizations []DailyNetworkUtilization, err error) {
+func (s *Service) GetDailyNetworkUtilization(start, end utils.Time, isDesc bool) (utilizations []iface.DailyNetworkUtilization, err error) {
 	sort := "asc"
 	if isDesc {
 		sort = "desc"
@@ -132,7 +133,7 @@ func (s *Service) GetDailyNetworkUtilization(start, end utils.Time, isDesc bool)
 //
 // Returns the historical measure of processing power of the Ethereum network.
 // Tips: The networkHashRate is represented in GigaHashes ( GH/s ).
-func (s *Service) GetDailyAvgNetworkHashRate(start, end utils.Time, isDesc bool) (hashRates []DailyAvgNetworkHashRate, err error) {
+func (s *Service) GetDailyAvgNetworkHashRate(start, end utils.Time, isDesc bool) (hashRates []iface.DailyAvgNetworkHashRate, err error) {
 	sort := "asc"
 	if isDesc {
 		sort = "desc"
@@ -150,7 +151,7 @@ func (s *Service) GetDailyAvgNetworkHashRate(start, end utils.Time, isDesc bool)
 // description: https://docs.etherscan.io/api-endpoints/stats-1#get-daily-transaction-count
 //
 // Returns the number of transactions per day.
-func (s *Service) GetDailyTxCount(start, end utils.Time, isDesc bool) (txCounts []DailyTxCount, err error) {
+func (s *Service) GetDailyTxCount(start, end utils.Time, isDesc bool) (txCounts []iface.DailyTxCount, err error) {
 	sort := "asc"
 	if isDesc {
 		sort = "desc"
@@ -168,7 +169,7 @@ func (s *Service) GetDailyTxCount(start, end utils.Time, isDesc bool) (txCounts 
 // description: https://docs.etherscan.io/api-endpoints/stats-1#get-daily-average-network-difficulty
 //
 // Returns the daily average network difficulty.
-func (s *Service) GetDailyAvgNetworkDifficulty(start, end utils.Time, isDesc bool) (difficulties []DailyAvgNetworkDifficulty, err error) {
+func (s *Service) GetDailyAvgNetworkDifficulty(start, end utils.Time, isDesc bool) (difficulties []iface.DailyAvgNetworkDifficulty, err error) {
 	sort := "asc"
 	if isDesc {
 		sort = "desc"
@@ -187,7 +188,7 @@ func (s *Service) GetDailyAvgNetworkDifficulty(start, end utils.Time, isDesc boo
 //
 // Returns the historical Ether daily market capitalization.
 // Tip : The marketCap is represented in million US Dollars ( USD ).
-func (s *Service) GetEtherHistoricalDailyMarketCap(start, end utils.Time, isDesc bool) (marketCaps []EtherHistoricalDailyMarketCap, err error) {
+func (s *Service) GetEtherHistoricalDailyMarketCap(start, end utils.Time, isDesc bool) (marketCaps []iface.EtherHistoricalDailyMarketCap, err error) {
 	sort := "asc"
 	if isDesc {
 		sort = "desc"
@@ -206,7 +207,7 @@ func (s *Service) GetEtherHistoricalDailyMarketCap(start, end utils.Time, isDesc
 //
 // Returns the historical price of 1 ETH.
 // Tip : The price is represented in USD.
-func (s *Service) GetEtherHistoricalPrice(start, end utils.Time, isDesc bool) (prices []EtherHistoricalPrice, err error) {
+func (s *Service) GetEtherHistoricalPrice(start, end utils.Time, isDesc bool) (prices []iface.EtherHistoricalPrice, err error) {
 	sort := "asc"
 	if isDesc {
 		sort = "desc"
